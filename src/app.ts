@@ -6,6 +6,9 @@ import mongoSanitize from "express-mongo-sanitize";
 import xss from "xss-clean";
 import compression from "compression";
 import cors from "cors";
+import passport from "passport";
+import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
+import session from 'express-session';
 
 import globalErrorHandler from "./controllers/error.controller";
 
@@ -20,7 +23,62 @@ import CategoryRouter from "./routes/category.route";
 import CouponRouter from "./routes/coupon.route";
 import ReviewRouter from "./routes/review.route";
 
+// config passport
+interface Config {
+    GOOGLE_CLIENT_ID: string | undefined;
+    GOOGLE_CLIENT_SECRET: string | undefined;
+    COOKIE_SESSION_KEY1: string;
+    COOKIE_SESSION_KEY2: string;
+}
+
+const config: Config = {
+    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+    COOKIE_SESSION_KEY1: process.env.COOKIE_SESSION_KEY1 || 'key1',
+    COOKIE_SESSION_KEY2: process.env.COOKIE_SESSION_KEY2 || 'key2',
+};
+
+// Set up Google OAuth 2.0
+const AUTH_OPTIONS = {
+    callbackURL: '/api/v1/auth/google/callback',
+    clientID: config.GOOGLE_CLIENT_ID,
+    clientSecret: config.GOOGLE_CLIENT_SECRET,
+};
+
+const verifyCallback = (accessToken: string, refreshToken: string, profile: any, done: any) => {
+    console.log('Google profile: ', profile);
+    process.nextTick(() => {
+        return done(null, profile);
+    });
+};
+
+// Passport's Strategy and Serialize/Deserialize Functions
+passport.use(new GoogleStrategy(AUTH_OPTIONS, verifyCallback));
+passport.serializeUser((user: any, done) => {
+    done(null, user.id);
+});
+passport.deserializeUser((obj: any, done) => {
+    done(null, obj);
+});
+
+
 const app = express();
+
+// cookie-session
+app.use(session({
+    secret: 'your secret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        secure: 'auto', // tự động chuyển sang secure nếu ứng dụng chạy trên HTTPS
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000 // 24 hours
+    }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // Trust proxy
 app.enable("trust proxy");
@@ -81,7 +139,14 @@ app.use(express.urlencoded({ extended: true }));
 // Set static files
 app.use(express.static(`${__dirname}/public`));
 
+// test login google
+import { Request, Response, NextFunction } from "express";
+
 // Routes
+app.get("/", (req: Request, res: Response) => {
+    res.send("Hello world!");
+});
+
 app.use("/api/v1/users", UserRouter);
 app.use("/api/v1/books", BookRouter);
 app.use("/api/v1/orders", OrderRouter);
