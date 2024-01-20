@@ -7,16 +7,20 @@ WORKDIR /app
 
   # Copy package.json and package-lock.json to /app
 COPY package*.json ./
+
+# Install dependencies
 RUN yarn install
+# Install typescript compiler
+RUN yarn global add typescript
 
 # Copy the rest of the app's source code to /app
 COPY . .
 
-# Set the user to NODE user (non-root) to prevent security issues
-USER node
+# Build the app
+RUN yarn build
 
 # Run the app
-CMD ["yarn", "start"]
+CMD ["yarn", "run", "start:prod"]
 
 # Expose port 8080
 EXPOSE 8080
