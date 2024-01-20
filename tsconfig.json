@@ -4,12 +4,14 @@
 		"target": "es5",
 		"module": "commonjs",
 		"moduleResolution": "node",
-		"outDir": "./build",
+		"outDir": "./dist",
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"sourceMap": true,
 		"typeRoots": ["./src/types", "./node_modules/@types"],
-		"esModuleInterop": true
+		"esModuleInterop": true,
+		"allowJs": true,
+		"checkJs": false
 		// "noImplicitAny": true
 	}
 }

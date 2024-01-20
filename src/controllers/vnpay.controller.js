@@ -5,7 +5,7 @@ const moment = require("moment");
 const User = require("../models/user.model");
 const Book = require("../models/book.model");
 const Order = require("../models/order.model");
-const AppError = require("../utils/appError");
+const AppError = require("../utils/AppError");
 const Payment = require("../models/payment.model");
 
 exports.createVNPAYPayment = async (req, res, next) => {
