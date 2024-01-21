@@ -30,9 +30,7 @@ export const createUser = async (
 		// Remove password and from user object
 		newUser.password = undefined;
 
-		res.status(201).json({
-			data: newUser,
-		});
+		res.created(newUser);
 	} catch (err) {
 		// Delete uploaded image
 		if (req.file) {
@@ -107,9 +105,7 @@ export const updateMe = async (
 			}
 		}
 
-		res.status(200).json({
-			data: updatedUser,
-		});
+		res.ok(updatedUser);
 	} catch (err) {
 		// Delete uploaded image
 		if (req.file) {

@@ -13,12 +13,10 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
 			unionSeparator: ", hoặc",
 		});
 
-		return res.status(400).json({
-			error: {
-				errorMessage: validationErrors.message,
-				errorCode: "INVALID_ARGUMENTS",
-				errorFields: convertToReadableMetadata(validationErrors.details),
-			},
+		return res.badRequest({
+			errorMessage: validationErrors.message,
+			errorCode: "INVALID_ARGUMENTS",
+			errorFields: convertToReadableMetadata(validationErrors.details),
 		});
 	}
 
@@ -28,25 +26,21 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
 			(error: { message: string }) => error.message
 		);
 
-		return res.status(400).json({
-			error: {
-				errorMessage: validationErrorMessages.join("; "),
-				errorCode: "INVALID_ARGUMENTS",
-				errorFields: err.errors,
-			},
+		return res.badRequest({
+			errorMessage: validationErrorMessages.join("; "),
+			errorCode: "INVALID_ARGUMENTS",
+			errorFields: err.errors,
 		});
 	} else if (err instanceof mongoose.Error.CastError) {
 		// Check if error is Mongoose CastError
-		return res.status(400).json({
-			error: {
-				errorMessage: `Không thể chuyển đổi ${err.value} thành ${err.kind}}`,
-				errorCode: "CAST_ERROR",
-				errorFields: {
-					[err.path]: {
-						value: err.value,
-						kind: err.kind,
-						message: `Không thể chuyển đổi ${err.value} thành ${err.kind}}`,
-					},
+		return res.badRequest({
+			errorMessage: `Không thể chuyển đổi ${err.value} thành ${err.kind}}`,
+			errorCode: "CAST_ERROR",
+			errorFields: {
+				[err.path]: {
+					value: err.value,
+					kind: err.kind,
+					message: `Không thể chuyển đổi ${err.value} thành ${err.kind}}`,
 				},
 			},
 		});
@@ -58,18 +52,16 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
 			", "
 		)}) đã tồn tại`;
 
-		return res.status(400).json({
-			error: {
-				errorMessage: errorMessage,
-				errorCode: "DUPLICATE_KEY",
-				errorFields: err.keyValue,
-			},
+		return res.badRequest({
+			errorMessage: errorMessage,
+			errorCode: "DUPLICATE_KEY",
+			errorFields: err.keyValue,
 		});
 	}
 
 	// Check if error is AppError (custom error)
 	if (err.isOperational) {
-		return res.status(err.statusCode || 500).json({
+		return res.error({
 			message: err.message,
 			reasonPhrase: err.reasonPhrase,
 			metadata: err.metadata,
@@ -77,7 +69,7 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
 	}
 
 	console.log(err);
-	return res.status(500).json({
+	return res.error({
 		message: "Có lỗi xảy ra. Xin hãy liên hệ với admin.",
 		reasonPhrase: "INTERNAL_SERVER_ERROR",
 	});

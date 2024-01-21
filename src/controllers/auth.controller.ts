@@ -43,7 +43,7 @@ export const signup = async (
 
 	res.cookie("accessToken", accessToken, accessTokenOptions);
 
-	res.status(201).json({
+	res.ok({
 		accessToken: accessToken,
 		data: user,
 	});
@@ -70,7 +70,7 @@ export const login = async (
 
 	res.cookie("accessToken", accessToken, accessTokenOptions);
 
-	res.status(200).json({
+	res.ok({
 		accessToken,
 		userId: user._id,
 	});
@@ -82,11 +82,7 @@ export const logout = (req: Request, res: Response, next: NextFunction) => {
 		httpOnly: true,
 	});
 
-	res.status(200).json({
-		meta: {
-			status: "success",
-		},
-	});
+	res.ok({});
 };
 
 export const updatePassword = async (
@@ -129,7 +125,7 @@ export const updatePassword = async (
 
 	res.cookie("accessToken", accessToken, accessTokenOptions);
 
-	res.status(200).json({
+	res.ok({
 		accessToken,
 	});
 };
@@ -209,10 +205,7 @@ export const protect = async (
 		);
 
 	// GRANT ACCESS TO PROTECTED ROUTE
-	req.user = currentUser as any as FlattenMaps<IUser> & {
-		_id: ObjectId;
-		id?: string;
-	};
+	req.user = currentUser;
 
 	return next();
 };
