@@ -51,7 +51,7 @@ const verifyCallback = (
 	profile: any,
 	done: any
 ) => {
-	console.log("Google profile: ", profile);
+	// console.log("Google profile: ", profile);
 	process.nextTick(() => {
 		return done(null, profile);
 	});
@@ -59,6 +59,12 @@ const verifyCallback = (
 
 // Passport's Strategy and
 passport.use(new GoogleStrategy(AUTH_OPTIONS, verifyCallback));
+passport.serializeUser((user: any, done) => {
+    done(null, user.id);
+});
+passport.deserializeUser((obj: any, done) => {
+    done(null, obj);
+});
 
 const app = express();
 

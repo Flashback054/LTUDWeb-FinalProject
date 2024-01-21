@@ -5,6 +5,7 @@ import AppError from "../utils/AppError";
 import { createAccessToken, signToken } from "../utils/generateToken";
 import { promisify } from "util";
 import User, { IUser } from "../models/user.model";
+import { GoogleProfile, GoogleUser } from "../models/user.model";
 import { FlattenMaps, ObjectId } from "mongoose";
 
 export const signup = async (
@@ -294,3 +295,64 @@ function isChangedPasswordAfter(passwordUpdatedAt: Date, JWTTimestamp: number) {
 	// False: token was issued before password change time
 	return false;
 }
+
+// Google
+export const googleLogin = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	
+	// 1) Get google profile
+	const user = req.user as unknown as GoogleUser;
+	const profile = user._json;
+
+	console.log("Google profile: ", profile);
+
+	// 2) Check if googleId exists in database
+	const existingUser = await User.findOne({ googleId: profile.sub });
+
+	console.log("Existing user: ", existingUser);
+	// 3) If user not exists, create new user
+	if (!existingUser) {
+		console.log("Creating new user...");
+		const newUser = await User.create({
+			googleId: profile.sub,
+			name: profile.name,
+			email: profile.email,
+			photo: profile.picture,
+		});
+
+		console.log("New user: ", newUser);
+		const { accessToken, accessTokenOptions } = createAccessToken(newUser, req);
+
+		res.cookie("accessToken", accessToken, accessTokenOptions);
+
+		console.log("accessToken: ", accessToken);
+		console.log("accessTokenOptions: ", accessTokenOptions);
+
+		res.ok({
+			accessToken,
+			userId: newUser._id,
+		});
+	} else {
+		// 4) If user exists, send tokens to client
+		const { accessToken, accessTokenOptions } = createAccessToken(
+			existingUser,
+			req
+		);
+
+		res.cookie("accessToken", accessToken, accessTokenOptions);
+
+		console.log("accessToken: ", accessToken);
+		console.log("accessTokenOptions: ", accessTokenOptions);
+
+		res.ok({
+			accessToken,
+			userId: existingUser._id,
+		});
+	}
+
+	// 5) Redirect to client
+	res.redirect("/");
+};

@@ -166,5 +166,32 @@ userSchema.plugin(mongooseLeanVirtuals);
 
 const User = mongoose.model<IUser, UserModel>("User", userSchema);
 
+// Google User
+interface GoogleProfile {
+    sub: string;
+    name: string;
+    given_name: string;
+    family_name: string;
+    picture: string;
+    email: string;
+    email_verified: boolean;
+    locale: string;
+}
+
+interface GoogleUser {
+    id: string;
+    displayName: string;
+    name: {
+        familyName: string;
+        givenName: string;
+    };
+    emails: Array<{ value: string, verified: boolean }>;
+    photos: Array<{ value: string }>;
+    provider: string;
+    _raw: string;
+    _json: GoogleProfile;
+}
+
+export { GoogleUser, GoogleProfile };
 export default User;
 export { IUser, UserModel };

@@ -26,14 +26,10 @@ router.get(
 router.get(
     '/google/callback',
     passport.authenticate('google', {
-        successRedirect: '/',
         failureRedirect: '/api/v1/auth/failure',
         session: true,
     }),
-    (req: Request, res: Response) => {
-        console.log('Google called our callback!');
-        // Thêm mã xử lý tại đây...
-    }
+    authController.googleLogin
 );
 
 router.get("/failure", (req, res, next) => {
