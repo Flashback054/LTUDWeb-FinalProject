@@ -1,42 +1,18 @@
-let querystring = require("qs");
-let crypto = require("crypto");
-const moment = require("moment");
+// @ts-nocheck
+import crypto from "crypto";
+import querystring from "querystring";
+import moment from "moment";
+import { Request, Response, NextFunction } from "express";
 
-const User = require("../models/user.model");
-const Book = require("../models/book.model");
-const Order = require("../models/order.model");
-const AppError = require("../utils/AppError");
-const Payment = require("../models/payment.model");
+import AppError from "../utils/AppError";
+import ChargeHistory from "../models/chargeHistory.model";
+import User from "../models/user.model";
 
-exports.createVNPAYPayment = async (req, res, next) => {
-	// Get order
-	const order =
-		req.order || (await Order.findById(req.params.id).lean({ virtuals: true }));
-
-	let payment = await Payment.findOne({ order: order._id }).lean({
-		virtuals: true,
-	});
-
-	// If payment is not found, create a new one
-	if (!payment) {
-		payment = await Payment.create({
-			order: order._id,
-			paymentDescription: `Thanh toán đơn hàng ${order._id}`,
-			totalPrice: order.totalPrice,
-			finalPrice: order.finalPrice,
-		});
-	}
-
-	// If payment is found and status is success, throw an error
-	if (payment?.status === "success") {
-		throw new AppError(
-			400,
-			"DUPLICATE_TRANSACTION",
-			"Thanh toán cho đơn hàng này đã được thực hiện trước đó."
-		);
-	}
-
-	// If payment is found and statis is either "pending" or "failed", attempt to init a new VNPAY transaction
+exports.createVNPAYCharge = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
 	process.env.TZ = "Asia/Ho_Chi_Minh";
 
 	let date = new Date();
@@ -49,9 +25,9 @@ exports.createVNPAYPayment = async (req, res, next) => {
 	let secretKey = process.env.vnp_HashSecret;
 	let vnpUrl = process.env.vnp_Url;
 	let returnUrl = process.env.vnp_ReturnUrl;
-	// let ipnUrl = process.env.vnp_IpnUrl;
-	let paymentId = payment.id;
-	let amount = payment.finalPrice;
+	let ipnUrl = process.env.vnp_IpnUrl;
+	let orderId = req.body.id;
+	let amount = req.body.amount;
 	// let bankCode = req.body.bankCode;
 	let bankCode = null;
 	let locale = "vn";
@@ -62,8 +38,8 @@ exports.createVNPAYPayment = async (req, res, next) => {
 	vnp_Params["vnp_TmnCode"] = tmnCode;
 	vnp_Params["vnp_Locale"] = locale;
 	vnp_Params["vnp_CurrCode"] = currCode;
-	vnp_Params["vnp_TxnRef"] = paymentId;
-	vnp_Params["vnp_OrderInfo"] = "Thanh toan cho ma GD:" + paymentId;
+	vnp_Params["vnp_TxnRef"] = orderId;
+	vnp_Params["vnp_OrderInfo"] = "Thanh toan cho ma GD:" + orderId;
 	vnp_Params["vnp_OrderType"] = "other";
 	vnp_Params["vnp_Amount"] = amount * 100;
 	vnp_Params["vnp_ReturnUrl"] = returnUrl;
@@ -83,16 +59,18 @@ exports.createVNPAYPayment = async (req, res, next) => {
 	vnpUrl += "?" + querystring.stringify(vnp_Params, { encode: false });
 
 	// Redirecting with CSP headers is not allowed, return a 200 response with the redirect URL instead
-	res.status(200).json({
-		data: vnpUrl,
-	});
+	res.redirect(vnpUrl);
 };
 
-exports.vnpayReturn = async (req, res, next) => {
+exports.vnpayReturn = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
 	let vnp_Params = req.query;
 	let secureHash = vnp_Params["vnp_SecureHash"];
 
-	let paymentId = vnp_Params["vnp_TxnRef"];
+	let orderId = vnp_Params["vnp_TxnRef"];
 	let rspCode = vnp_Params["vnp_ResponseCode"];
 
 	delete vnp_Params["vnp_SecureHash"];
@@ -104,10 +82,10 @@ exports.vnpayReturn = async (req, res, next) => {
 	let hmac = crypto.createHmac("sha512", secretKey);
 	let signed = hmac.update(Buffer.from(signData, "utf-8")).digest("hex");
 
-	const payment = await Payment.findById(paymentId);
+	const chargeHistory = await ChargeHistory.findById(orderId);
 
-	let checkPaymentId = !!payment; // Mã đơn hàng "giá trị của vnp_TxnRef" VNPAY phản hồi tồn tại trong CSDL của bạn
-	let checkAmount = payment.finalPrice === vnp_Params.vnp_Amount / 100; // Kiểm tra số tiền "giá trị của vnp_Amout/100" trùng khớp với số tiền của đơn hàng trong CSDL của bạn
+	let checkOrderId = !!chargeHistory; // Mã đơn hàng "giá trị của vnp_TxnRef" VNPAY phản hồi tồn tại trong CSDL của bạn
+	let checkAmount = chargeHistory.chargeAmount === vnp_Params.vnp_Amount / 100; // Kiểm tra số tiền "giá trị của vnp_Amout/100" trùng khớp với số tiền của đơn hàng trong CSDL của bạn
 
 	// 3 belows conditions are never met if using the exact vnpUrl provided by backend.
 	// Just in case, I still keep them here.
@@ -115,21 +93,21 @@ exports.vnpayReturn = async (req, res, next) => {
 		throw new AppError(400, "INVALID_ARGUMENTS", "Invalid signature");
 	}
 
-	if (!checkPaymentId) {
-		throw new AppError(400, "INVALID_ARGUMENTS", "Invalid payment ID");
+	if (!checkOrderId) {
+		throw new AppError(400, "INVALID_ARGUMENTS", "Invalid order ID");
 	}
 
 	if (!checkAmount) {
 		throw new AppError(400, "INVALID_ARGUMENTS", "Invalid amount");
 	}
 
-	if (payment.status === "success") {
+	if (chargeHistory.chargeStatus === "success") {
 		throw new AppError(
 			400,
 			"DUPLICATE_TRANSACTION",
 			"Thanh toán nạp tiền đã được thực hiện trước đó.",
 			{
-				payment,
+				chargeHistory,
 			}
 		);
 	}
@@ -137,22 +115,20 @@ exports.vnpayReturn = async (req, res, next) => {
 	// Thanh toán thành công
 	if (rspCode === "00") {
 		// Cập nhật trạng thái giao dịch thanh toán thành công vào CSDL của bạn
-		payment.status = "success";
-		payment.paymentDate = Date.now();
-		await payment.save();
+		chargeHistory.chargeStatus = "success";
+		await chargeHistory.save();
+		// Update user's balance
+		const { user, chargeAmount } = chargeHistory;
+		const query = User.findByIdAndUpdate(user, {
+			$inc: { balance: chargeAmount },
+		});
+		const chargedUser = await query;
 
-		// Update order status to "paid"
-		const paidOrder = await Order.findByIdAndUpdate(
-			payment.order,
-			{ status: "paid" },
-			{ new: true }
-		);
-
-		res.status(200).redirect("http://localhost:5173/customer/deposit");
+		res.status(200).redirect(`${process.env.FRONTEND_URL}/customer/deposit`);
 	} else {
 		// Thanh toán thất bại. Kiểm tra rspCode để biết lý do thất bại
 
-		let errMessage;
+		let errMessage: string;
 		switch (rspCode) {
 			case "09":
 				errMessage = `Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.`;
@@ -188,16 +164,16 @@ exports.vnpayReturn = async (req, res, next) => {
 		}
 
 		// Cập nhật trạng thái giao dịch thanh toán thất bại vào CSDL của bạn
-		payment.status = "failed";
-		payment.paymentError = errMessage;
-		await payment.save();
+		chargeHistory.chargeStatus = "failed";
+		chargeHistory.chargeError = errMessage;
+		await chargeHistory.save();
 
-		res.status(200).redirect("http://localhost:5173/customer/deposit");
+		res.status(200).redirect(`${process.env.FRONTEND_URL}/customer/deposit`);
 	}
 };
 
 // Sort OBJ function provided by VNPAY
-function sortObject(obj) {
+function sortObject(obj: object) {
 	let sorted = {};
 	let str = [];
 	let key;

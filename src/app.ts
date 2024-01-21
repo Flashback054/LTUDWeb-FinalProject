@@ -17,10 +17,8 @@ import BookRouter from "./routes/book.route";
 import UserRouter from "./routes/user.route";
 import OrderRouter from "./routes/order.route";
 import AuthRouter from "./routes/auth.route";
-import PaymentRouter from "./routes/payment.route";
 import StatisticRouter from "./routes/statistic.route";
 import CategoryRouter from "./routes/category.route";
-import CouponRouter from "./routes/coupon.route";
 import ReviewRouter from "./routes/review.route";
 
 // config passport
@@ -40,9 +38,10 @@ const config: Config = {
 
 // Set up Google OAuth 2.0
 const AUTH_OPTIONS = {
-	callbackURL: "/api/v1/auth/google/callback",
+	callbackURL: "http://localhost:8080/api/v1/auth/google/callback",
 	clientID: config.GOOGLE_CLIENT_ID,
 	clientSecret: config.GOOGLE_CLIENT_SECRET,
+	scope: ["email", "profile", "openid"],
 };
 
 const verifyCallback = (
@@ -60,10 +59,10 @@ const verifyCallback = (
 // Passport's Strategy and
 passport.use(new GoogleStrategy(AUTH_OPTIONS, verifyCallback));
 passport.serializeUser((user: any, done) => {
-    done(null, user.id);
+	done(null, user.id);
 });
 passport.deserializeUser((obj: any, done) => {
-    done(null, obj);
+	done(null, obj);
 });
 
 const app = express();
@@ -184,19 +183,10 @@ app.response.error = function (error: any) {
 	});
 };
 
-// test login google
-import { Request, Response, NextFunction } from "express";
-
-// Routes
-app.get("/", (req: Request, res: Response) => {
-	res.send("Hello world!");
-});
-
 app.use("/api/v1/users", UserRouter);
 app.use("/api/v1/books", BookRouter);
 app.use("/api/v1/orders", OrderRouter);
 app.use("/api/v1/auth", AuthRouter);
-app.use("/api/v1/payments", PaymentRouter);
 app.use("/api/v1/statistics", StatisticRouter);
 app.use("/api/v1/categories", CategoryRouter);
 app.use("/api/v1/reviews", ReviewRouter);
