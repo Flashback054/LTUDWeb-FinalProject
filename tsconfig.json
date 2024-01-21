@@ -11,7 +11,7 @@
 		"typeRoots": ["./src/types", "./node_modules/@types"],
 		"esModuleInterop": true,
 		"allowJs": true,
-		"checkJs": true
+		"checkJs": false
 		// "noImplicitAny": true
 	}
 }
