@@ -1,11 +1,10 @@
-import * as bcrypt from "bcryptjs";
 import * as jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 import AppError from "../utils/AppError";
 import { createAccessToken, signToken } from "../utils/generateToken";
 import { promisify } from "util";
 import User, { IUser } from "../models/user.model";
-import { FlattenMaps, ObjectId } from "mongoose";
+import { GoogleProfile, GoogleUser } from "../models/user.model";
 
 export const signup = async (
 	req: Request,
@@ -294,3 +293,43 @@ function isChangedPasswordAfter(passwordUpdatedAt: Date, JWTTimestamp: number) {
 	// False: token was issued before password change time
 	return false;
 }
+
+// Google
+export const googleLogin = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	// 1) Get google profile
+	const user = req.user as unknown as GoogleUser;
+	const profile = user._json;
+
+	console.log("Google profile: ", profile);
+
+	// 2) Check if googleId exists in database
+	let existingUser = await User.findOne({ googleId: profile.sub });
+
+	// 3) If user not exists, create new user
+	if (!existingUser) {
+		existingUser = await User.create({
+			googleId: profile.sub,
+			authType: "google",
+			name: profile.name,
+			email: profile.email,
+			image: profile.picture,
+			imagePublicId: undefined,
+		});
+	}
+
+	const { accessToken, accessTokenOptions } = createAccessToken(
+		existingUser,
+		req
+	);
+
+	res.cookie("accessToken", accessToken, accessTokenOptions);
+
+	res.ok({
+		accessToken,
+		userId: existingUser._id,
+	});
+};

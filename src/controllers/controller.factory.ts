@@ -148,7 +148,9 @@ let updateOne =
 			!(oldDoc.image.search("default") !== -1) // prevent deleting default image
 		) {
 			// Use cloudinary to delete old image
-			await cloudinary.uploader.destroy(oldDoc.imagePublicId);
+			try {
+				await cloudinary.uploader.destroy(oldDoc.imagePublicId);
+			} catch (err) {}
 		}
 
 		if (options?.populate) {
@@ -188,9 +190,7 @@ let deleteOne =
 			// Use cloudinary to delete old image
 			try {
 				await cloudinary.uploader.destroy(doc.imagePublicId);
-			} catch (err) {
-				console.log(err);
-			}
+			} catch (err) {}
 		}
 
 		res.noContent();

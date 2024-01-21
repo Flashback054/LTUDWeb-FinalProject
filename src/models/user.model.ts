@@ -9,7 +9,7 @@ interface IUser {
 	id: Types.ObjectId;
 	name: string;
 	email: string;
-	password: string;
+	password?: string;
 	role: string;
 	authType: string;
 	googleId: string;
@@ -108,7 +108,7 @@ userSchema.index({ email: 1 });
 // Decrypt password
 userSchema.pre("save", async function (next) {
 	// only run this function if Password is modified
-	if (this.password && !this.isModified("password")) return next();
+	if (!this.password || !this.isModified("password")) return next();
 
 	// 12 : how CPU intensive to hash password
 	this.password = await bcrypt.hash(this.password, 12);
@@ -118,7 +118,7 @@ userSchema.pre("save", async function (next) {
 
 // Update passwordUpdatedAt
 userSchema.pre("save", function (next) {
-	if ((this.password && !this.isModified("password")) || this.isNew)
+	if (!this.password || !this.isModified("password") || this.isNew)
 		return next();
 
 	// A little hack: minus 1 seconds : b/c this save process might finish after JWT being created -> error
@@ -166,5 +166,32 @@ userSchema.plugin(mongooseLeanVirtuals);
 
 const User = mongoose.model<IUser, UserModel>("User", userSchema);
 
+// Google User
+interface GoogleProfile {
+	sub: string;
+	name: string;
+	given_name: string;
+	family_name: string;
+	picture: string;
+	email: string;
+	email_verified: boolean;
+	locale: string;
+}
+
+interface GoogleUser {
+	id: string;
+	displayName: string;
+	name: {
+		familyName: string;
+		givenName: string;
+	};
+	emails: Array<{ value: string; verified: boolean }>;
+	photos: Array<{ value: string }>;
+	provider: string;
+	_raw: string;
+	_json: GoogleProfile;
+}
+
+export { GoogleUser, GoogleProfile };
 export default User;
 export { IUser, UserModel };

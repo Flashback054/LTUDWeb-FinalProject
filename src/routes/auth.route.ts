@@ -15,25 +15,20 @@ import { Request, Response, NextFunction } from "express";
 
 // OAuth 2.0 Endpoints
 router.get(
-    '/google',
-    passport.authenticate('google', {
-        scope: ['email', 'profile'],
-        accessType: 'offline',
-        prompt: 'consent',
-    })
+	"/google",
+	passport.authenticate("google", {
+		accessType: "offline",
+		prompt: "consent",
+	})
 );
 
 router.get(
-    '/google/callback',
-    passport.authenticate('google', {
-        successRedirect: '/',
-        failureRedirect: '/api/v1/auth/failure',
-        session: true,
-    }),
-    (req: Request, res: Response) => {
-        console.log('Google called our callback!');
-        // Thêm mã xử lý tại đây...
-    }
+	"/google/callback",
+	passport.authenticate("google", {
+		failureRedirect: "/api/v1/auth/failure",
+		session: true,
+	}),
+	authController.googleLogin
 );
 
 router.get("/failure", (req, res, next) => {
