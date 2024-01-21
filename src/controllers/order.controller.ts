@@ -95,9 +95,7 @@ export const createOrder = async (
 	]);
 
 	// Send response
-	res.status(201).json({
-		data: order,
-	});
+	res.created(order);
 };
 export const updateOrder = async (
 	req: Request,
@@ -212,9 +210,7 @@ export const updateOrder = async (
 		},
 	]);
 
-	res.status(200).json({
-		data: order,
-	});
+	res.created(order);
 };
 export const deleteOrder = async (
 	req: Request,
@@ -273,9 +269,7 @@ export const deleteOrder = async (
 		await Order.findByIdAndDelete(order.id);
 	}
 
-	res.status(204).json({
-		data: null,
-	});
+	res.noContent();
 };
 
 // Middleware
@@ -452,7 +446,5 @@ export const payOrder = async (
 	]);
 
 	// Send response
-	res.status(200).json({
-		data: order,
-	});
+	res.created(order);
 };

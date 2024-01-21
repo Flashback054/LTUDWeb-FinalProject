@@ -11,6 +11,8 @@ interface IUser {
 	email: string;
 	password: string;
 	role: string;
+	authType: string;
+	googleId: string;
 	image: string;
 	imagePublicId: string;
 	phone: string;
@@ -40,7 +42,6 @@ const userSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
 		},
 		password: {
 			type: String,
-			required: [true, "Hãy nhập mật khẩu của bạn"],
 			minlength: [8, "Mật khẩu phải có ít nhất 8 ký tự"],
 			select: false,
 		},
@@ -77,6 +78,16 @@ const userSchema = new mongoose.Schema<IUser, {}, IUserMethods>(
 			default: Date.now(),
 			select: false,
 		},
+		authType: {
+			type: String,
+			enum: ["local", "google"],
+			default: "local",
+		},
+		googleId: {
+			type: String,
+			unique: true,
+			sparse: true,
+		},
 	},
 	{
 		virtuals: {
@@ -97,7 +108,7 @@ userSchema.index({ email: 1 });
 // Decrypt password
 userSchema.pre("save", async function (next) {
 	// only run this function if Password is modified
-	if (!this.isModified("password")) return next();
+	if (this.password && !this.isModified("password")) return next();
 
 	// 12 : how CPU intensive to hash password
 	this.password = await bcrypt.hash(this.password, 12);
@@ -107,7 +118,8 @@ userSchema.pre("save", async function (next) {
 
 // Update passwordUpdatedAt
 userSchema.pre("save", function (next) {
-	if (!this.isModified("password") || this.isNew) return next();
+	if ((this.password && !this.isModified("password")) || this.isNew)
+		return next();
 
 	// A little hack: minus 1 seconds : b/c this save process might finish after JWT being created -> error
 	this.passwordUpdatedAt = new Date(Date.now() - 1000);

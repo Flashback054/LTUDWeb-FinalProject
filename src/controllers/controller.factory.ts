@@ -19,9 +19,7 @@ let createOne =
 				await newDoc.populate(options.populate);
 			}
 
-			res.status(201).json({
-				data: newDoc,
-			});
+			res.created(newDoc);
 		} catch (err) {
 			// Delete uploaded image
 			if (req.file) {
@@ -86,9 +84,7 @@ let getAll =
 		// Set X-Total-Count header
 		res.set("Access-Control-Expose-Headers", "X-Total-Count");
 		res.set("X-Total-Count", count);
-		res.status(200).json({
-			data: docs,
-		});
+		res.ok(docs);
 	};
 
 let getOne =
@@ -116,9 +112,7 @@ let getOne =
 			);
 		}
 
-		res.status(200).json({
-			data: doc,
-		});
+		res.ok(doc);
 	};
 
 let updateOne =
@@ -161,7 +155,7 @@ let updateOne =
 			await updatedDoc.populate(options.populate);
 		}
 
-		res.status(200).json({
+		res.ok({
 			data: updatedDoc,
 		});
 	};
@@ -199,9 +193,7 @@ let deleteOne =
 			}
 		}
 
-		res.status(204).json({
-			data: null,
-		});
+		res.noContent();
 	};
 
 export default { createOne, getAll, getOne, updateOne, deleteOne };

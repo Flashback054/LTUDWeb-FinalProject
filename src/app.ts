@@ -7,8 +7,8 @@ import xss from "xss-clean";
 import compression from "compression";
 import cors from "cors";
 import passport from "passport";
-import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
-import session from 'express-session';
+import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import session from "express-session";
 
 import globalErrorHandler from "./controllers/error.controller";
 
@@ -25,60 +25,59 @@ import ReviewRouter from "./routes/review.route";
 
 // config passport
 interface Config {
-    GOOGLE_CLIENT_ID: string | undefined;
-    GOOGLE_CLIENT_SECRET: string | undefined;
-    COOKIE_SESSION_KEY1: string;
-    COOKIE_SESSION_KEY2: string;
+	GOOGLE_CLIENT_ID: string | undefined;
+	GOOGLE_CLIENT_SECRET: string | undefined;
+	COOKIE_SESSION_KEY1: string;
+	COOKIE_SESSION_KEY2: string;
 }
 
 const config: Config = {
-    GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-    GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-    COOKIE_SESSION_KEY1: process.env.COOKIE_SESSION_KEY1 || 'key1',
-    COOKIE_SESSION_KEY2: process.env.COOKIE_SESSION_KEY2 || 'key2',
+	GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
+	GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
+	COOKIE_SESSION_KEY1: process.env.COOKIE_SESSION_KEY1 || "key1",
+	COOKIE_SESSION_KEY2: process.env.COOKIE_SESSION_KEY2 || "key2",
 };
 
 // Set up Google OAuth 2.0
 const AUTH_OPTIONS = {
-    callbackURL: '/api/v1/auth/google/callback',
-    clientID: config.GOOGLE_CLIENT_ID,
-    clientSecret: config.GOOGLE_CLIENT_SECRET,
+	callbackURL: "/api/v1/auth/google/callback",
+	clientID: config.GOOGLE_CLIENT_ID,
+	clientSecret: config.GOOGLE_CLIENT_SECRET,
 };
 
-const verifyCallback = (accessToken: string, refreshToken: string, profile: any, done: any) => {
-    console.log('Google profile: ', profile);
-    process.nextTick(() => {
-        return done(null, profile);
-    });
+const verifyCallback = (
+	accessToken: string,
+	refreshToken: string,
+	profile: any,
+	done: any
+) => {
+	console.log("Google profile: ", profile);
+	process.nextTick(() => {
+		return done(null, profile);
+	});
 };
 
-// Passport's Strategy and Serialize/Deserialize Functions
+// Passport's Strategy and
 passport.use(new GoogleStrategy(AUTH_OPTIONS, verifyCallback));
-passport.serializeUser((user: any, done) => {
-    done(null, user.id);
-});
-passport.deserializeUser((obj: any, done) => {
-    done(null, obj);
-});
-
 
 const app = express();
 
 // cookie-session
-app.use(session({
-    secret: 'your secret',
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-        secure: 'auto', // tự động chuyển sang secure nếu ứng dụng chạy trên HTTPS
-        httpOnly: true,
-        maxAge: 24 * 60 * 60 * 1000 // 24 hours
-    }
-}));
+app.use(
+	session({
+		secret: "your secret",
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			secure: "auto", // tự động chuyển sang secure nếu ứng dụng chạy trên HTTPS
+			httpOnly: true,
+			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+		},
+	})
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
-
 
 // Trust proxy
 app.enable("trust proxy");
@@ -139,12 +138,52 @@ app.use(express.urlencoded({ extended: true }));
 // Set static files
 app.use(express.static(`${__dirname}/public`));
 
+// Define response methods
+app.response.ok = function (data: any) {
+	this.status(200).json({
+		data,
+	});
+};
+app.response.created = function (data: any) {
+	this.status(201).json({
+		data,
+	});
+};
+app.response.noContent = function () {
+	this.status(204).json();
+};
+app.response.badRequest = function (error: any) {
+	this.status(400).json({
+		error,
+	});
+};
+app.response.unauthorized = function (error: any) {
+	this.status(401).json({
+		error,
+	});
+};
+app.response.forbidden = function (error: any) {
+	this.status(403).json({
+		error,
+	});
+};
+app.response.notFound = function (error: any) {
+	this.status(404).json({
+		error,
+	});
+};
+app.response.error = function (error: any) {
+	this.status(500).json({
+		error,
+	});
+};
+
 // test login google
 import { Request, Response, NextFunction } from "express";
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
-    res.send("Hello world!");
+	res.send("Hello world!");
 });
 
 app.use("/api/v1/users", UserRouter);

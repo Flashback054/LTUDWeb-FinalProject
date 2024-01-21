@@ -11,9 +11,7 @@ export const countSellingBooks = async (
 		quantity: { $gt: 0 },
 	});
 
-	res.status(200).json({
-		data: countBooks,
-	});
+	res.ok(countBooks);
 };
 
 export const countBooks = async (
@@ -23,9 +21,7 @@ export const countBooks = async (
 ) => {
 	const countBooks = await Book.countDocuments();
 
-	res.status(200).json({
-		data: countBooks,
-	});
+	res.ok(countBooks);
 };
 
 export const countNewOrders = async (
@@ -37,9 +33,7 @@ export const countNewOrders = async (
 
 	const countNewOrders = await Order.countNewOrders(type as string);
 
-	res.status(200).json({
-		data: countNewOrders,
-	});
+	res.ok(countNewOrders);
 };
 
 // Top 5 low stock books
@@ -52,9 +46,7 @@ export const getTop5LowStockBooks = async (
 		.sort({ quantity: 1 })
 		.limit(5);
 
-	res.status(200).json({
-		data: top5LowStockBooks,
-	});
+	res.ok(top5LowStockBooks);
 };
 
 export const getRevenueAndProfitStats = async (
@@ -70,9 +62,7 @@ export const getRevenueAndProfitStats = async (
 		endDate
 	);
 
-	res.status(200).json({
-		data: revenueAndProfitStats,
-	});
+	res.ok(revenueAndProfitStats);
 };
 
 export const getBookSaleStats = async (
@@ -88,7 +78,5 @@ export const getBookSaleStats = async (
 		endDate
 	);
 
-	res.status(200).json({
-		data: bookSaleStats,
-	});
+	res.ok(bookSaleStats);
 };
