@@ -8,7 +8,7 @@
 		"emitDecoratorMetadata": true,
 		"experimentalDecorators": true,
 		"sourceMap": true,
-		"typeRoots": ["./src/types", "./node_modules/@types"],
+		"typeRoots": ["./src/commons/types", "./node_modules/@types"],
 		"esModuleInterop": true,
 		"allowJs": true,
 		"checkJs": false

@@ -18,18 +18,29 @@ const DB = process.env.DATABASE.replace(
 );
 
 let server;
+let paymentServer;
 mongoose.connect(DB).then(async (con) => {
 	console.log("Connect to DB successfully.");
 
 	/* eslint-disable global-require */
-	const app = require("./app");
+	const app = require("./primary-server/app");
+	const paymentApp = require("./payment-server/app");
 	/* eslint-enable global-require */
 
-	const PORT = process.env.PORT || 6969;
+	const PORT = process.env.PORT || 8080;
 
 	server = app.listen(PORT, "0.0.0.0", () => {
 		console.log(`Server started! Listening on port ${PORT}`);
 	});
+	paymentServer = paymentApp.listen(
+		process.env.PAYMENT_SERVER_PORT,
+		"0.0.0.0",
+		() => {
+			console.log(
+				`Payment server started! Listening on port ${process.env.PAYMENT_SERVER_PORT}`
+			);
+		}
+	);
 });
 
 // Catch ASYNC Rejection (like failed DB connection,...)

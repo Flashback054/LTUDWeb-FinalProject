@@ -6,6 +6,7 @@
 		"start": "node src/server.ts",
 		"dev": "nodemon src/server.ts",
 		"build": "tsc",
+		"check-types": "tsc --noEmit",
 		"start:prod": "node dist/server.js",
 		"tailwind:css": "postcss src/public/styles/tailwind.css -o src/public/styles/style.css"
 	},
