@@ -52,6 +52,9 @@ const hbs = create({
         currency: "VND",
       }).format(value);
     },
+    currentYear() {
+      return new Date().getFullYear();
+    },
   },
 });
 app.engine("html", hbs.engine);
