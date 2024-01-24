@@ -9,6 +9,11 @@
     --font-body: "Open Sans", sans-serif;
   }
 
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4rem;
+  }
+
   body {
     min-height: 100vh;
     min-height: 100svh;

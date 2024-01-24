@@ -45,8 +45,27 @@
   <body>
     {{>layout/header}}
     <!--  -->
+    {{> layout/main-nav}}
+    <!--  -->
     {{{body}}}
     <!--  -->
     {{>layout/footer}}
   </body>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const mainNav = document.getElementById("main-nav");
+      const mainNavLinks = mainNav.querySelectorAll("a");
+
+      const location = window.location;
+
+      mainNavLinks.forEach((link) => {
+        if (link.getAttribute("href") === location.pathname) {
+          link.classList.add("text-primary");
+        } else {
+          link.classList.remove("text-primary");
+        }
+      });
+    });
+  </script>
 </html>
