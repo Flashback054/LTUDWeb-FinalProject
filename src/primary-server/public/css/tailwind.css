@@ -52,4 +52,12 @@
   .site-container {
     @apply container px-4 mx-auto;
   }
+
+  .font-heading {
+    font-family: var(--font-heading);
+  }
+
+  .font-body {
+    font-family: var(--font-body);
+  }
 }
