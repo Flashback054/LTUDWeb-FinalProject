@@ -776,32 +776,17 @@ select {
 
 :root {
   --font-heading: "Bricolage Grotesque", sans-serif;
-  --font-body: "Noto Sans Display", sans-serif;
+  /* --font-body: "Noto Sans Display", sans-serif; */
+  --font-body: "Open Sans", sans-serif;
 }
 
 body {
   min-height: 100vh;
   min-height: 100svh;
-  font-size: 1rem;
   font-family: var(--font-body);
-  line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
-:where(input, button, textarea, select, summary):focus {
-    outline: none;
-  }
-
-:where(input, button, textarea, select, summary):focus-visible {
-    outline: 4px solid var(--color-brand-200);
-    outline-offset: 2px;
-  }
-
-:where(input, button, textarea, select, summary):disabled {
-    background-color: var(--color-grey-100);
-    color: var(--color-grey-500);
-  }
 
 h1,
 h2,
