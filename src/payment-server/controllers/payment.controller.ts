@@ -5,7 +5,7 @@ import { Request, Response, NextFunction } from "express";
 import { optional } from "zod";
 
 export const getAllPayments = ControllerFactory.getAll(Payment, {
-	allowNestedQueries: ["userId"],
+	allowNestedQueries: ["user"],
 	populate: {
 		path: "order",
 		populate: {

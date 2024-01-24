@@ -12,8 +12,6 @@ router.param("id", validateRequestId("id"));
 
 router.get("/vnpay-return", vnpayController.vnpayReturn);
 
-router.use(authController.protect);
-
 router.get("/", chargeHistoryController.getAllChargeHistories);
 router.get("/:id", chargeHistoryController.getChargeHistory);
 router.post(
