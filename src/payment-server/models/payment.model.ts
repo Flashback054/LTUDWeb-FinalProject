@@ -40,6 +40,7 @@ const paymentSchema = new mongoose.Schema<IPayment>(
 		paymentError: String,
 		paymentDate: {
 			type: Date,
+			default: Date.now(),
 		},
 		description: String,
 		totalPrice: {

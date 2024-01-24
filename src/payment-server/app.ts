@@ -71,25 +71,6 @@ app.use(express.urlencoded({ extended: true }));
 import responseConfig from "../commons/configs/response.config";
 responseConfig(app);
 
-app.get("/login", (req, res) => {
-	res.send(`
-    <form action="http://localhost:8080/api/v1/auth/login" method="POST">
-      <input type="email" name="email" />
-      <input type="password" name="password" />
-      <input type="submit" value="Submit" />
-    </form>
-  `);
-});
-
-app.get("/", (req, res) => {
-	res.send(`
-    <form action="/api/v1/charge-histories" method="POST">
-      <input type="number" name="chargeAmount" />
-      <input type="submit" value="Submit" />
-    </form>
-  `);
-});
-
 // API routes
 app.use("/api/v1", BaseRouter);
 

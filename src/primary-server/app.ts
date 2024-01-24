@@ -19,102 +19,107 @@ import ViewRouter from "./routes/view.route";
 
 const app = express();
 
-// cookie-session
 app.use(
-  session({
-    secret: "your secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: {
-      secure: "auto", // tự động chuyển sang secure nếu ứng dụng chạy trên HTTPS
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 hours
-    },
-  })
+	session({
+		secret: "your secret",
+		resave: false,
+		saveUninitialized: false,
+		cookie: {
+			secure: "auto", // tự động chuyển sang secure nếu ứng dụng chạy trên HTTPS
+			httpOnly: true,
+			maxAge: 24 * 60 * 60 * 1000, // 24 hours
+		},
+	})
 );
 
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Trust proxy
 app.enable("trust proxy");
 
 // View engine
 const hbs = create({
-  extname: ".html",
-  layoutsDir: `${__dirname}/views/layouts`,
-  partialsDir: `${__dirname}/views/components/`,
-  helpers: {
-    currencyFormat(value: number | bigint) {
-      return Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-      }).format(value);
-    },
-  },
+	extname: ".html",
+	layoutsDir: `${__dirname}/views/layouts`,
+	partialsDir: `${__dirname}/views/components/`,
+	helpers: {
+		currencyFormat(value: number | bigint) {
+			return Intl.NumberFormat("vi-VN", {
+				style: "currency",
+				currency: "VND",
+			}).format(value);
+		},
+	},
 });
 app.engine("html", hbs.engine);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "html");
 
-// CORS;
 const allowOrigins = ["http://localhost:5173", "http://localhost:4173"];
 app.use(
-  cors({
-    credentials: true,
-    origin: allowOrigins,
-  })
+	cors({
+		credentials: true,
+		origin: allowOrigins,
+	})
 );
 app.options("*", cors());
 
-// Security HTTP headers
 app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: {
-      policy: "cross-origin",
-    },
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["*"],
-        scriptSrc: [
-          "* data: 'unsafe-eval' 'unsafe-inline' blob: https://sandbox.vnpayment.vn",
-        ],
-        connectSrc: ["*", "https://sandbox.vnpayment.vn"],
-        frameSrc: ["*", "https://sandbox.vnpayment.vn"],
-        navigateTo: ["*"],
-      },
-    },
-  })
+	helmet({
+		crossOriginEmbedderPolicy: false,
+		crossOriginResourcePolicy: {
+			policy: "cross-origin",
+		},
+		contentSecurityPolicy: {
+			directives: {
+				formAction: ["*"],
+				defaultSrc: ["*"],
+				scriptSrc: [
+					"* data: 'unsafe-eval' 'unsafe-inline' blob: https://sandbox.vnpayment.vn",
+				],
+				connectSrc: ["*", "https://sandbox.vnpayment.vn"],
+				frameSrc: ["*", "https://sandbox.vnpayment.vn"],
+				navigateTo: ["*"],
+			},
+		},
+	})
 );
 
-// Data sanitization against NoSQL query injection
 app.use(mongoSanitize());
-
-// Data sanitization against XSS
 app.use(xss());
 
-// compress all the response text (ex: JSON or HTML)
 app.use(compression());
-
-// Body parser
 app.use(express.json());
-// Cookie parser
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
-
-// Set static files
 app.use(express.static(`${__dirname}/public`));
 
 // Config response (add custom methods)
 import responseConfig from "../commons/configs/response.config";
 responseConfig(app);
 
-// Method override
 app.use(methodOverride("_method"));
-// Flash
 app.use(flash());
+
+app.get("/login", (req, res) => {
+	res.send(`
+    <form action="http://localhost:8080/api/v1/auth/login" method="POST">
+      <input type="email" name="email" />
+      <input type="password" name="password" />
+      <input type="submit" value="Submit" />
+    </form>
+  `);
+});
+
+app.get("/charge", (req, res) => {
+	res.send(`
+    <form action="/api/v1/charge-histories" method="POST">
+      <input type="number" name="chargeAmount" />
+      <input type="submit" value="Submit" />
+    </form>
+  `);
+});
 
 // API routes
 app.use("/api/v1", BaseRouter);
