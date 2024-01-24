@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from "express";
 import ChargeHistory from "../models/chargeHistory.model";
 import ControllerFactory from "../../commons/controllers/controller.factory";
+import PaymentAccount from "../models/paymentAccount.model";
+import AppError from "../../commons/utils/AppError";
 
 export const getAllChargeHistories = ControllerFactory.getAll(ChargeHistory, {
 	populate: {
@@ -22,12 +24,20 @@ export const createChargeHistory = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const user = req.user;
-	const { amount } = req.body;
+	const userId = req.query.user;
+
+	const paymentAccount = await PaymentAccount.findOne({ user: userId }).lean();
+	if (!paymentAccount) {
+		await PaymentAccount.create({
+			user: userId,
+		});
+	}
+
+	const { chargeAmount } = req.body;
 	const chargeHistory = await ChargeHistory.create({
-		user: user.id,
-		chargeAmount: amount,
-		chargeDescription: `Nạp tiền vào tài khoản ${user.email} số tiền ${amount} VNĐ`,
+		user: userId,
+		chargeAmount: chargeAmount,
+		chargeDescription: `Nạp tiền vào tài khoản ${userId} số tiền ${chargeAmount} VNĐ`,
 	});
 
 	req.body.id = chargeHistory.id;

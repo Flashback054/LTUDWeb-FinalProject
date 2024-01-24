@@ -3,8 +3,8 @@ import { IOrder } from "../../../primary-server/models/order.model";
 import { RequestOptions } from "https";
 
 interface IRequestToServer {
-	toPrimaryServer: (url: string, options: any) => Promise<any>;
-	toPaymentServer: (url: string, options: any) => Promise<any>;
+	toPrimaryServer: (url?: string, options?: any) => Promise<any>;
+	toPaymentServer: (url?: string, options?: any) => Promise<any>;
 }
 declare global {
 	namespace Express {

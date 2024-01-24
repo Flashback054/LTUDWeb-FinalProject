@@ -13,7 +13,7 @@ export const getAllReviews = ControllerFactory.getAll(Review, {
 			select: "name",
 		},
 	],
-	allowNestedQueries: ["userId"],
+	allowNestedQueries: ["user"],
 });
 
 export const getReview = ControllerFactory.getOne(Review, {

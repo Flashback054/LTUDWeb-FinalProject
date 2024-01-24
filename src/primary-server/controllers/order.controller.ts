@@ -17,7 +17,7 @@ export const getAllOrders = ControllerFactory.getAll(Order, {
 			select: "name email",
 		},
 	],
-	allowNestedQueries: ["userId"],
+	allowNestedQueries: ["user"],
 });
 export const getOrder = ControllerFactory.getOne(Order, {
 	populate: [

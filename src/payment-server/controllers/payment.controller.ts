@@ -2,7 +2,7 @@ import Payment from "../models/payment.model";
 import ControllerFactory from "../../commons/controllers/controller.factory";
 
 export const getAllPayments = ControllerFactory.getAll(Payment, {
-	allowNestedQueries: ["userId"],
+	allowNestedQueries: ["user"],
 	populate: {
 		path: "order",
 		populate: {

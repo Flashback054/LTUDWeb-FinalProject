@@ -8,22 +8,16 @@ const serverUrls = {
 const isProduction = process.env.NODE_ENV === "production";
 
 const requestTemplate = (req: Request, res: Response, url: string) => {
-	return async (path: string, options: any) => {
+	return async (path?: string, options?: any) => {
 		try {
-			const headers = {
-				...req.headers,
-
-				"Content-Type": "application/json",
-			};
-			console.log({
-				url,
-				path,
-			});
+			options = options || {};
+			path = path || req.originalUrl;
+			console.log(`${url}${path}`);
 
 			const response = await axios({
 				url: `${url}${path}`,
-				headers,
-				data: options.data || req.body,
+				headers: req.headers,
+				body: options.data || req.body,
 				method: options.method || req.method,
 				params: options.params || req.query,
 				...options,
