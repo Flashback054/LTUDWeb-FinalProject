@@ -31,3 +31,31 @@ export const updateBook = ControllerFactory.updateOne(Book, {
 	},
 });
 export const deleteBook = ControllerFactory.deleteOne(Book);
+export const getRecommendationBooks = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const book = await Book.findById(req.params.id);
+
+	let recommendedBooks = await Book.find(
+		{_id: { $ne: book._id }, 
+		category: book.category})
+			.sort({ ratingsAverage: -1 })
+			.limit(10)
+			.lean();
+
+	if (recommendedBooks.length === 0) {
+		recommendedBooks = await Book.find({
+			_id: { $ne: book._id }
+		})
+		.sort({ ratingsAverage: -1 })
+		.limit(10)
+		.lean();
+	}
+
+	res.ok({
+		data: recommendedBooks
+	});
+
+};

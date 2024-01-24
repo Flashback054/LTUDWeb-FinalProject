@@ -2,13 +2,24 @@
 	"name": "windows-my-shop-backend",
 	"version": "1.0.0",
 	"main": "index.js",
+	"watch": {
+		"tailwind:css": {
+			"patterns": [
+				"src/primary-server/public/css/tailwind.css",
+				"src/primary-server/views/**/*.html"
+			],
+			"extensions": "css,html",
+			"quiet": false
+		}
+	},
 	"scripts": {
 		"start": "node src/server.ts",
 		"dev": "nodemon src/server.ts",
 		"build": "tsc",
 		"check-types": "tsc --noEmit",
 		"start:prod": "node dist/server.js",
-		"tailwind:css": "postcss src/public/styles/tailwind.css -o src/public/styles/style.css"
+		"tailwind:css": "postcss src/primary-server/public/css/tailwind.css -o src/primary-server/public/css/style.css -w",
+		"watch:css": "npm-watch tailwind:css"
 	},
 	"license": "MIT",
 	"dependencies": {
@@ -41,6 +52,7 @@
 		"multer": "^1.4.5-lts.1",
 		"multer-storage-cloudinary": "^4.0.0",
 		"nodemon": "^3.0.3",
+		"npm-watch": "^0.11.0",
 		"passport": "^0.7.0",
 		"passport-google-oauth20": "^2.0.0",
 		"postcss": "^8.4.33",
