@@ -1,5 +1,6 @@
 import { Express, Request, Response } from "express";
 import axios from "axios";
+import { CustomRequestError } from "../utils/AppError";
 
 const serverUrls = {
 	primary: `${process.env.PRIMARY_SERVER_URL}`,
@@ -26,10 +27,7 @@ const requestTemplate = (req: Request, res: Response, url: string) => {
 		} catch (err) {
 			if (err.response) {
 				const { status, data } = err.response;
-				if (status === 500) {
-					return res.error(data.error);
-				}
-				return res.status(status).json(data);
+				throw new CustomRequestError(status, data.error);
 			} else {
 				return res.error(err);
 			}

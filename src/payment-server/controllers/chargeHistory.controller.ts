@@ -9,7 +9,7 @@ export const getAllChargeHistories = ControllerFactory.getAll(ChargeHistory, {
 		path: "user",
 		select: "name email",
 	},
-	allowNestedQueries: ["userId"],
+	allowNestedQueries: ["user"],
 });
 
 export const getChargeHistory = ControllerFactory.getOne(ChargeHistory, {

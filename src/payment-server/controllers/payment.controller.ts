@@ -3,6 +3,7 @@ import PaymentAccount from "../models/paymentAccount.model";
 import ControllerFactory from "../../commons/controllers/controller.factory";
 import { Request, Response, NextFunction } from "express";
 import { optional } from "zod";
+import AppError from "../../commons/utils/AppError";
 
 export const getAllPayments = ControllerFactory.getAll(Payment, {
 	allowNestedQueries: ["user"],
@@ -29,26 +30,25 @@ export const createPayment = async (
 	next: NextFunction
 ) => {
 	try {
-		const newPayment = await Payment.create(req.body);
-        const userAccount = await PaymentAccount.findOne({ user: newPayment.user });
-        const adminAccount = await PaymentAccount.findOne({ isAdminAccount: true });
+		const { finalPrice, user } = req.body;
+		const userAccount = await PaymentAccount.findOne({ user });
+		const adminAccount = await PaymentAccount.findOne({ isAdminAccount: true });
 
-        if (userAccount.balance >= newPayment.finalPrice) {
-            userAccount.balance -= newPayment.finalPrice;
-            adminAccount.balance += newPayment.finalPrice;
+		if (userAccount.balance >= finalPrice) {
+			const newPayment = await Payment.create(req.body);
+			userAccount.balance -= newPayment.finalPrice;
+			adminAccount.balance += newPayment.finalPrice;
 
-            await userAccount.save();
-            await adminAccount.save();
+			await userAccount.save();
+			await adminAccount.save();
 
-            res.created(newPayment);
-        } else {
-            res.status(400).send("Không đủ số dư trong tài khoản");
-        }
+			res.created(newPayment);
+		} else {
+			throw new AppError(400, "BAD_REQUEST", "Số dư không đủ");
+		}
 	} catch (err) {
-
 		throw err;
 	}
-
 };
 export const updatePayment = ControllerFactory.updateOne(Payment);
 export const deletePayment = ControllerFactory.deleteOne(Payment);
