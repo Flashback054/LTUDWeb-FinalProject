@@ -26,5 +26,6 @@ router.patch(
 	bookController.updateBook
 );
 router.delete("/:id", bookController.deleteBook);
+router.get("/recommendations/:id", validateRequestId("id"), bookController.getRecommendationBooks);
 
 export default router;
