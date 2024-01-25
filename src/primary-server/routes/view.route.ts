@@ -33,18 +33,47 @@ router.get("/books", async (req, res) => {
     });
   }
 
-  const [categories, books] = await Promise.all([
+  const [categories, books, countBooks] = await Promise.all([
     Category.find({}).lean(),
     query
       .skip((+page - 1) * +limit)
       .limit(+limit)
       .lean(),
+    Book.countDocuments({}),
   ]);
+
+  const totalPages = Math.ceil(countBooks / +limit);
+  const currentPage = +page;
+  const currentUrl = req.originalUrl.toString().replace(/[&?]page=\d+/, "");
+
+  if (currentUrl.includes("?")) {
+    currentUrl.concat("&");
+  } else {
+    currentUrl.concat("?");
+  }
+
+  const pagination = {
+    currentPage,
+    prevPage: currentPage > 1 ? currentPage - 1 : 1,
+    nextPage: currentPage < totalPages ? currentPage + 1 : totalPages,
+    hasNextPage: currentPage < totalPages ? "true" : "false",
+    hasPrevPage: currentPage > 1 ? "true" : "false",
+    pageList: [
+      currentPage - 2,
+      currentPage - 1,
+      currentPage,
+      currentPage + 1,
+      currentPage + 2,
+    ].filter((page) => page > 0 && page <= totalPages),
+    currentUrl,
+  };
 
   res.render("pages/books", {
     title: "Fohoso - Thế giới sách",
     categories,
     books,
+    pagination,
+    countBooks,
   });
 });
 

@@ -1,6 +1,8 @@
 <section>
   <div class="flex justify-between gap-2 mb-8">
-    <h2 class="text-xl font-bold uppercase">Tất cả Sách</h2>
+    <h2 class="text-xl font-bold uppercase">
+      Tất cả Sách - {{countBooks}} kết quả
+    </h2>
     <form action="" id="book-sort-form">
       <label for="sort-criteria" class="text-sm font-bold"
         >Sắp xếp theo:
@@ -19,15 +21,18 @@
     </form>
   </div>
 
-  <ul class="flex flex-wrap justify-between gap-x-2 gap-y-4">
-    {{#each books}}
-    <li class="max-w-[170px] min-w-[120px]">
-      {{#with this}}
-      <!--  -->
-      {{> book-card}}
-      <!--  -->
-      {{/with}}
-    </li>
-    {{/each}}
-  </ul>
+  <div>
+    <ul class="flex flex-wrap justify-between gap-x-2 gap-y-4">
+      {{#each books}}
+      <li class="max-w-[170px] min-w-[120px]">
+        {{#with this}}
+        <!--  -->
+        {{> book-card}}
+        <!--  -->
+        {{/with}}
+      </li>
+      {{/each}}
+    </ul>
+    {{> pagination}}
+  </div>
 </section>

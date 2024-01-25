@@ -56,6 +56,7 @@
       const mainNav = document.getElementById("main-nav");
       const mainNavLinks = mainNav.querySelectorAll("a");
       const bookSortForm = document.getElementById("book-sort-form");
+      const bookPagination = document.getElementById("book-pagination");
 
       const location = window.location;
 
@@ -78,6 +79,24 @@
 
         sortCriteria.addEventListener("change", function () {
           bookSortForm.submit();
+        });
+      }
+
+      if (bookPagination) {
+        const bookNavigationLinks = bookPagination.querySelectorAll("a");
+        const searchParams = new URLSearchParams(location.search);
+        const page = searchParams.get("page") ?? 1;
+
+        console.log(page, bookNavigationLinks);
+
+        bookNavigationLinks.forEach((link) => {
+          const pageNumber = link.getAttribute("data-page");
+
+          if (pageNumber === page) {
+            link.dataset.current = true;
+          } else {
+            link.dataset.current = false;
+          }
         });
       }
     });
