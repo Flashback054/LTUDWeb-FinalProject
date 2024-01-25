@@ -29,6 +29,8 @@ export const createPaymentAccount = async (
 	res: Response,
 	next: NextFunction
 ) => {
+	if (!req.body.user) req.body.user = req.user?.id;
+
 	const paymentAccount = await req.request.toPaymentServer(req.originalUrl, {
 		method: "POST",
 		data: req.body,

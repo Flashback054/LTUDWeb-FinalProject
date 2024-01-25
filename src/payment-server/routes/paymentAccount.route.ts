@@ -12,7 +12,11 @@ router.param("id", validateRequestId("id"));
 
 router.get("/", paymentAccountController.getAllPaymentAccounts);
 router.get("/:id", paymentAccountController.getPaymentAccount);
-router.post("/", paymentAccountController.createPaymentAccount);
+router.post(
+	"/",
+	validateRequest(CreatePaymentAccountSchema),
+	paymentAccountController.createPaymentAccount
+);
 router.patch("/:id", paymentAccountController.updatePaymentAccount);
 router.delete("/:id", paymentAccountController.deletePaymentAccount);
 
