@@ -54,13 +54,19 @@
   <script>
     document.addEventListener("DOMContentLoaded", function () {
       const mainNav = document.getElementById("main-nav");
-      const mainNavLinks = mainNav.querySelectorAll("a");
+      const mainNavLinks = mainNav?.querySelectorAll("a");
       const bookSortForm = document.getElementById("book-sort-form");
       const bookPagination = document.getElementById("book-pagination");
+      const categoryLinkList = document.getElementById("category-links");
+      const bookPriceRangeFilter =
+        document.getElementById("price-range-filter");
+      const bookRatingFilter = document.getElementById("rating-filter");
+      const categoryDetails = document.getElementById("category-details");
+      const removeFilterButton = document.getElementById("remove-filter-btn");
 
       const location = window.location;
 
-      mainNavLinks.forEach((link) => {
+      mainNavLinks?.forEach((link) => {
         if (link.getAttribute("href") === location.pathname) {
           link.classList.add("text-primary");
         } else {
@@ -100,11 +106,143 @@
           const pageNumber = +link.getAttribute("data-page");
 
           if (pageNumber == page) {
-            console.log(pageNumber, page);
-            link.dataset.current = true;
+            link.dataset.current = "true";
           } else {
-            link.dataset.current = false;
+            link.dataset.current = "false";
           }
+        });
+      }
+
+      if (categoryLinkList) {
+        const categoryLinks = categoryLinkList.querySelectorAll("a");
+        const searchParams = new URLSearchParams(location.search);
+        const category = searchParams.get("category");
+
+        categoryLinks.forEach((link) => {
+          const categoryId = link.getAttribute("data-id");
+
+          if (categoryId == category) {
+            link.dataset.current = "true";
+          } else {
+            link.dataset.current = "false";
+          }
+        });
+      }
+
+      if (bookPriceRangeFilter) {
+        const priceRangeInputs = bookPriceRangeFilter.querySelectorAll("input");
+        const searchParams = new URLSearchParams(location.search);
+        const priceRange = searchParams.get("priceRange");
+        let count = 0;
+
+        priceRangeInputs.forEach((input) => {
+          const inputPriceRange = input.getAttribute("value");
+
+          if (inputPriceRange == priceRange) {
+            input.checked = true;
+            count += 1;
+          } else {
+            input.checked = false;
+          }
+        });
+
+        if (count == 0) {
+          priceRangeInputs[0].checked = true;
+        }
+
+        priceRangeInputs.forEach((input) => {
+          input.addEventListener("change", function () {
+            const currentUrl = new URL(location.href);
+
+            currentUrl.searchParams.delete("page");
+            currentUrl.searchParams.delete("priceRange");
+
+            if (this.checked) {
+              currentUrl.searchParams.set("priceRange", this.value);
+            }
+
+            if (this.value == "all") {
+              currentUrl.searchParams.delete("priceRange");
+            }
+
+            window.location.href = currentUrl.href;
+          });
+        });
+      }
+
+      if (bookRatingFilter) {
+        const ratingInputs = bookRatingFilter.querySelectorAll("input");
+        const searchParams = new URLSearchParams(location.search);
+        const rating = searchParams.get("rating");
+        let count = 0;
+
+        ratingInputs.forEach((input) => {
+          const inputRating = input.getAttribute("value");
+
+          if (inputRating == rating) {
+            input.checked = true;
+            count += 1;
+          } else {
+            input.checked = false;
+          }
+        });
+
+        if (count == 0) {
+          ratingInputs[0].checked = true;
+        }
+
+        ratingInputs.forEach((input) => {
+          input.addEventListener("change", function () {
+            const currentUrl = new URL(location.href);
+
+            currentUrl.searchParams.delete("page");
+            currentUrl.searchParams.delete("rating");
+
+            if (this.checked) {
+              currentUrl.searchParams.set("rating", this.value);
+            }
+
+            if (this.value == "all") {
+              currentUrl.searchParams.delete("rating");
+            }
+
+            window.location.href = currentUrl.href;
+          });
+        });
+      }
+
+      if (categoryDetails) {
+        const searchParams = new URLSearchParams(location.search);
+        const category = searchParams.get("category");
+
+        if (category) {
+          categoryDetails.open = true;
+        }
+      }
+
+      if (removeFilterButton) {
+        const currentUrl = new URL(location.href);
+
+        if (
+          !currentUrl.searchParams.get("priceRange") &&
+          !currentUrl.searchParams.get("rating") &&
+          !currentUrl.searchParams.get("category") &&
+          !currentUrl.searchParams.get("q")
+        ) {
+          removeFilterButton.parentElement.style.display = "none";
+        }
+
+        removeFilterButton.addEventListener("click", function () {
+          const currentUrl = new URL(location.href);
+          const sort = currentUrl.searchParams.get("sort");
+
+          currentUrl.search = "";
+
+          if (sort) {
+            currentUrl.searchParams.set("sort", sort);
+          }
+
+          window.location.href = currentUrl.href;
         });
       }
     });

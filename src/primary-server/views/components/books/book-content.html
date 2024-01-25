@@ -33,6 +33,20 @@
       </li>
       {{/each}}
     </ul>
+
+    {{#if pagination.hasPagination}}
+    <!--  -->
     {{> pagination}}
+    <!--  -->
+    {{/if}}
+
+    <!--  -->
+    {{#unless books.length}}
+    <p
+      class="py-2 text-2xl text-center text-white uppercase bg-green-700 rounded-sm font-heading"
+    >
+      Không có kết quả nào phù hợp
+    </p>
+    {{/unless}}
   </div>
 </section>

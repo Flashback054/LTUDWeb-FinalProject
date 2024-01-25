@@ -791,6 +791,10 @@ select {
 .col-span-9 {
   grid-column: span 9 / span 9;
 }
+.-mx-1 {
+  margin-left: -0.25rem;
+  margin-right: -0.25rem;
+}
 .mx-auto {
   margin-left: auto;
   margin-right: auto;
@@ -798,6 +802,10 @@ select {
 .my-2 {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+}
+.my-4 {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 .my-8 {
   margin-top: 2rem;
@@ -817,6 +825,9 @@ select {
 }
 .mb-9 {
   margin-bottom: 2.25rem;
+}
+.ml-4 {
+  margin-left: 1rem;
 }
 .ml-8 {
   margin-left: 2rem;
@@ -902,6 +913,12 @@ select {
   --tw-translate-y: -50%;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
+.cursor-pointer {
+  cursor: pointer;
+}
+.list-none {
+  list-style-type: none;
+}
 .grid-cols-12 {
   grid-template-columns: repeat(12, minmax(0, 1fr));
 }
@@ -965,6 +982,9 @@ select {
 .self-center {
   align-self: center;
 }
+.self-stretch {
+  align-self: stretch;
+}
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1017,6 +1037,10 @@ select {
   --tw-border-opacity: 1;
   border-color: rgb(208 231 226 / var(--tw-border-opacity));
 }
+.border-gray-400 {
+  --tw-border-opacity: 1;
+  border-color: rgb(156 163 175 / var(--tw-border-opacity));
+}
 .border-gray-50\/80 {
   border-color: rgb(249 250 251 / 0.8);
 }
@@ -1024,9 +1048,9 @@ select {
   --tw-border-opacity: 1;
   border-color: rgb(107 114 128 / var(--tw-border-opacity));
 }
-.border-gray-600 {
+.border-gray-700 {
   --tw-border-opacity: 1;
-  border-color: rgb(75 85 99 / var(--tw-border-opacity));
+  border-color: rgb(55 65 81 / var(--tw-border-opacity));
 }
 .border-gray-900 {
   --tw-border-opacity: 1;
@@ -1040,6 +1064,10 @@ select {
   --tw-border-opacity: 1;
   border-color: rgb(22 163 74 / var(--tw-border-opacity));
 }
+.bg-green-700 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 128 61 / var(--tw-bg-opacity));
+}
 .bg-orange-500 {
   --tw-bg-opacity: 1;
   background-color: rgb(249 115 22 / var(--tw-bg-opacity));
@@ -1047,6 +1075,10 @@ select {
 .bg-primary {
   --tw-bg-opacity: 1;
   background-color: rgb(22 163 74 / var(--tw-bg-opacity));
+}
+.bg-red-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 38 38 / var(--tw-bg-opacity));
 }
 .bg-white {
   --tw-bg-opacity: 1;
@@ -1099,6 +1131,10 @@ select {
 }
 .p-4 {
   padding: 1rem;
+}
+.px-1 {
+  padding-left: 0.25rem;
+  padding-right: 0.25rem;
 }
 .px-2 {
   padding-left: 0.5rem;
@@ -1253,6 +1289,12 @@ select {
   --tw-text-opacity: 1;
   color: rgb(234 179 8 / var(--tw-text-opacity));
 }
+.decoration-primary {
+  text-decoration-color: #16a34a;
+}
+.decoration-2 {
+  text-decoration-thickness: 2px;
+}
 .underline-offset-2 {
   text-underline-offset: 2px;
 }
@@ -1367,10 +1409,13 @@ select {
 .last\:border-r-0:last-child {
   border-right-width: 0px;
 }
-.hover\:scale-\[1\.02\]:hover {
-  --tw-scale-x: 1.02;
-  --tw-scale-y: 1.02;
+.hover\:scale-\[1\.01\]:hover {
+  --tw-scale-x: 1.01;
+  --tw-scale-y: 1.01;
   transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
+.hover\:border-dashed:hover {
+  border-style: dashed;
 }
 .hover\:border-gray-700:hover {
   --tw-border-opacity: 1;
@@ -1423,6 +1468,10 @@ select {
   --tw-shadow-colored: 0 4px 6px -1px var(--tw-shadow-color), 0 2px 4px -2px var(--tw-shadow-color);
   box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
 }
+.group[open] .group-open\:rotate-180 {
+  --tw-rotate: 180deg;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+}
 .group:hover .group-hover\:flex {
   display: flex;
 }
@@ -1446,4 +1495,7 @@ select {
 .data-\[ok\=false\]\:bg-gray-200[data-ok=false] {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
+}
+.data-\[current\=true\]\:underline[data-current=true] {
+  text-decoration-line: underline;
 }

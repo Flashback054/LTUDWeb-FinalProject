@@ -20,11 +20,59 @@ router.get("/", async (req, res) => {
   });
 });
 
+const priceRangeMap = {
+  "0-50": {
+    min: 0,
+    max: 50,
+  },
+  "50-100": {
+    min: 50,
+    max: 100,
+  },
+  "100-200": {
+    min: 100,
+    max: 200,
+  },
+  "200-500": {
+    min: 200,
+    max: 500,
+  },
+  "500-": {
+    min: 500,
+    max: Infinity,
+  },
+};
+
+const ratingRangeMap = {
+  "0-2": {
+    min: 0,
+    max: 2,
+  },
+  "2-4": {
+    min: 2,
+    max: 4,
+  },
+  "4-": {
+    min: 4,
+    max: 5,
+  },
+};
+
 router.get("/books", async (req, res) => {
-  const { sort, category, q, limit = 10, page = 1 } = req.query;
+  const {
+    sort,
+    category,
+    q,
+    limit = 10,
+    page = 1,
+    priceRange,
+    rating,
+  } = req.query;
   const findObj: {
     name?: { $regex: RegExp };
     category?: string;
+    sellingPrice?: { $gte: number; $lte: number };
+    ratingsAverage?: { $gte: number; $lte: number };
   } = {};
 
   if (q) {
@@ -34,6 +82,18 @@ router.get("/books", async (req, res) => {
   if (category) {
     findObj.category = category.toString();
   }
+
+  if (priceRange && priceRange != "all") {
+    const { min, max } = priceRangeMap[priceRange.toString()];
+    findObj.sellingPrice = { $gte: min * 1_000, $lte: max * 1_000 };
+  }
+
+  if (rating && rating != "all") {
+    const { min, max } = ratingRangeMap[rating.toString()];
+    findObj.ratingsAverage = { $gte: min, $lte: max };
+  }
+
+  console.log(findObj);
 
   const query = Book.find(findObj);
 
@@ -78,6 +138,7 @@ router.get("/books", async (req, res) => {
       currentPage + 2,
     ].filter((page) => page > 0 && page <= totalPages),
     currentUrl,
+    hasPagination: totalPages > 1,
   };
 
   res.render("pages/books", {
