@@ -1,0 +1,33 @@
+<section>
+  <div class="flex justify-between gap-2 mb-8">
+    <h2 class="text-xl font-bold uppercase">Tất cả Sách</h2>
+    <form action="" id="book-sort-form">
+      <label for="sort-criteria" class="text-sm font-bold"
+        >Sắp xếp theo:
+      </label>
+      <select name="sort" id="sort-criteria" class="py-1 border-0 rounded-sm">
+        <option value="">Mặc định (Hệ thống)</option>
+        <option value="name">Tên sách (A - Z)</option>
+        <option value="-name">Tên sách (Z - A)</option>
+        <option value="sellingPrice">Giá sách (Thấp - Cao)</option>
+        <option value="-sellingPrice">Giá sách (Cao - Thấp)</option>
+        <option value="createAt">Ngày tạo (Mới)</option>
+        <option value="-createAt">Ngày tạo (Cũ)</option>
+        <option value="ratingsAverage">Đánh giá (Thấp - Cao)</option>
+        <option value="-ratingsAverage">Đánh giá (Cao - Thấp)</option>
+      </select>
+    </form>
+  </div>
+
+  <ul class="flex flex-wrap justify-between gap-x-2 gap-y-4">
+    {{#each books}}
+    <li class="max-w-[170px] min-w-[120px]">
+      {{#with this}}
+      <!--  -->
+      {{> book-card}}
+      <!--  -->
+      {{/with}}
+    </li>
+    {{/each}}
+  </ul>
+</section>

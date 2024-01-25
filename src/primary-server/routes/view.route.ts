@@ -20,8 +20,32 @@ router.get("/", async (req, res) => {
   });
 });
 
-router.get("/books", (req, res) => {
-  res.render("pages/books", { title: "Fohoso - Thế giới sách" });
+router.get("/books", async (req, res) => {
+  const { sort, limit = 10, page = 1 } = req.query;
+
+  const query = Book.find({});
+
+  if (sort) {
+    query.sort({
+      [sort.toString().replace("-", "")]: sort.toString().includes("-")
+        ? -1
+        : 1,
+    });
+  }
+
+  const [categories, books] = await Promise.all([
+    Category.find({}).lean(),
+    query
+      .skip((+page - 1) * +limit)
+      .limit(+limit)
+      .lean(),
+  ]);
+
+  res.render("pages/books", {
+    title: "Fohoso - Thế giới sách",
+    categories,
+    books,
+  });
 });
 
 export default router;

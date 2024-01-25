@@ -1,4 +1,4 @@
-<div class="h-[400px] site-container py-16">
-  <div>sidebar</div>
-  <div>content</div>
-</div>
+<main class="grid grid-cols-12 gap-8 py-16 site-container">
+  <aside class="col-span-3">{{> books/sidebar}}</aside>
+  <section class="col-span-9">{{> books/book-content}}</section>
+</main>

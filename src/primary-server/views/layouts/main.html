@@ -55,6 +55,7 @@
     document.addEventListener("DOMContentLoaded", function () {
       const mainNav = document.getElementById("main-nav");
       const mainNavLinks = mainNav.querySelectorAll("a");
+      const bookSortForm = document.getElementById("book-sort-form");
 
       const location = window.location;
 
@@ -65,6 +66,20 @@
           link.classList.remove("text-primary");
         }
       });
+
+      if (bookSortForm) {
+        const sortCriteria = bookSortForm.querySelector("#sort-criteria");
+        const searchParams = new URLSearchParams(location.search);
+        const sort = searchParams.get("sort");
+
+        if (sort) {
+          sortCriteria.value = sort;
+        }
+
+        sortCriteria.addEventListener("change", function () {
+          bookSortForm.submit();
+        });
+      }
     });
   </script>
 </html>
