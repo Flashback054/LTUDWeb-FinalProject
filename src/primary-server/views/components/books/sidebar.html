@@ -7,12 +7,16 @@
     >
       Tìm kiếm theo tựa sách
     </h3>
-    <form action="/books" class="flex overflow-hidden border rounded-md">
+    <form
+      action="{{pagination.currentUrl}}"
+      class="flex overflow-hidden border rounded-md"
+    >
       <label for="book-query" class="sr-only">Tìm kiếm sách theo tựa</label>
       <input
         type="text"
         id="book-query"
         name="q"
+        value="{{q}}"
         class="px-3 py-2 border-0 placeholder:text-sm"
         placeholder="Tìm kiếm sách theo tựa..."
       />

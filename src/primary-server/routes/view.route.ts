@@ -21,9 +21,21 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/books", async (req, res) => {
-  const { sort, limit = 10, page = 1 } = req.query;
+  const { sort, category, q, limit = 10, page = 1 } = req.query;
+  const findObj: {
+    name?: { $regex: RegExp };
+    category?: string;
+  } = {};
 
-  const query = Book.find({});
+  if (q) {
+    findObj.name = { $regex: new RegExp(q.toString(), "i") };
+  }
+
+  if (category) {
+    findObj.category = category.toString();
+  }
+
+  const query = Book.find(findObj);
 
   if (sort) {
     query.sort({
@@ -39,7 +51,7 @@ router.get("/books", async (req, res) => {
       .skip((+page - 1) * +limit)
       .limit(+limit)
       .lean(),
-    Book.countDocuments({}),
+    Book.countDocuments(findObj),
   ]);
 
   const totalPages = Math.ceil(countBooks / +limit);
@@ -74,6 +86,7 @@ router.get("/books", async (req, res) => {
     books,
     pagination,
     countBooks,
+    q,
   });
 });
 

@@ -78,7 +78,16 @@
         }
 
         sortCriteria.addEventListener("change", function () {
-          bookSortForm.submit();
+          const currentUrl = new URL(location.href);
+
+          currentUrl.searchParams.delete("page");
+          currentUrl.searchParams.delete("sort");
+
+          if (this.value != "") {
+            currentUrl.searchParams.set("sort", this.value);
+          }
+
+          window.location.href = currentUrl.href;
         });
       }
 
