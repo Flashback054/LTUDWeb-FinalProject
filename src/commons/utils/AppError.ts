@@ -25,9 +25,10 @@ export default class AppError extends Error {
 export class CustomRequestError extends Error {
 	public statusCode: number;
 	public error: any;
+	public type = "CustomRequestError";
 
 	constructor(statusCode: number, error: any) {
-		super(error.message);
+		super();
 		this.statusCode = statusCode;
 		this.error = error;
 

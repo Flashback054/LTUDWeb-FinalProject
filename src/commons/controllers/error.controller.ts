@@ -60,16 +60,20 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
 		});
 	}
 
-	if (err instanceof CustomRequestError) {
-		return res.status(err.statusCode).json(err.error);
+	if (err.type === "CustomRequestError") {
+		return res.status(err.statusCode).json({
+			error: err.error,
+		});
 	}
 
 	// Check if error is AppError (custom error)
-	if (err instanceof AppError && err.isOperational) {
+	if (err.isOperational) {
 		return res.status(err.statusCode).json({
-			message: err.message,
-			reasonPhrase: err.errorCode,
-			errorFields: err.errorFields,
+			error: {
+				message: err.message,
+				reasonPhrase: err.errorCode,
+				errorFields: err.errorFields,
+			},
 		});
 	}
 

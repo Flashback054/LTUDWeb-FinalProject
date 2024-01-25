@@ -20,21 +20,21 @@ export const createPaymentAccount = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const user = req.user;
+	const userId = req.body.user;
 	const existingPaymentAccount = await PaymentAccount.findOne({
-		user: user.id,
+		user: userId,
 	});
 	if (existingPaymentAccount) {
 		throw new AppError(
 			400,
 			"DUPLICATE_KEYS",
 			"Tài khoản thanh toán đã tồn tại.",
-			{ user: user.id }
+			{ user: userId }
 		);
 	}
 
 	const paymentAccount = await PaymentAccount.create({
-		user: user.id,
+		user: userId,
 	});
 
 	res.ok(paymentAccount);
