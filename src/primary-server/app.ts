@@ -104,7 +104,11 @@ app.use(
         ],
         connectSrc: ["*", "https://sandbox.vnpayment.vn"],
         frameSrc: ["*", "https://sandbox.vnpayment.vn"],
-        imgSrc: ["http://localhost:8080/", "https://res.cloudinary.com"],
+        imgSrc: [
+          "http://localhost:8080/",
+          "https://res.cloudinary.com",
+          "data:",
+        ],
       },
     },
   })
