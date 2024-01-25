@@ -4,7 +4,8 @@ export async function addMissingBooks(
 	statisticResult,
 	startDate,
 	endDate,
-	keys
+	keys,
+	sortOptions
 ) {
 	if (statisticResult.length === 0) return statisticResult;
 
