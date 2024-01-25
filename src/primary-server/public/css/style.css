@@ -845,6 +845,9 @@ select {
 .h-\[160px\] {
   height: 160px;
 }
+.h-\[300px\] {
+  height: 300px;
+}
 .h-\[580px\] {
   height: 580px;
 }
@@ -881,6 +884,9 @@ select {
 }
 .max-w-\[230px\] {
   max-width: 230px;
+}
+.max-w-full {
+  max-width: 100%;
 }
 .flex-1 {
   flex: 1 1 0%;
@@ -1081,6 +1087,10 @@ select {
 }
 .bg-center {
   background-position: center;
+}
+.object-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .p-0 {
   padding: 0px;
