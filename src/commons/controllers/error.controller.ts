@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 import { fromZodError } from "zod-validation-error";
 import convertToReadableMetadata from "../utils/convertToReadableMetadata";
 import { Request, Response, NextFunction } from "express";
+import AppError, { CustomRequestError } from "../utils/AppError";
 
 export default (err: any, req: Request, res: Response, next: NextFunction) => {
 	// Check if erro is zod's error
@@ -59,12 +60,20 @@ export default (err: any, req: Request, res: Response, next: NextFunction) => {
 		});
 	}
 
+	if (err.type === "CustomRequestError") {
+		return res.status(err.statusCode).json({
+			error: err.error,
+		});
+	}
+
 	// Check if error is AppError (custom error)
 	if (err.isOperational) {
-		return res.error({
-			message: err.message,
-			reasonPhrase: err.reasonPhrase,
-			metadata: err.metadata,
+		return res.status(err.statusCode).json({
+			error: {
+				message: err.message,
+				reasonPhrase: err.errorCode,
+				errorFields: err.errorFields,
+			},
 		});
 	}
 

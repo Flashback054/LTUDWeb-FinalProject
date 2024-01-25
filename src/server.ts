@@ -22,10 +22,10 @@ let paymentServer;
 mongoose.connect(DB).then(async (con) => {
 	console.log("Connect to DB successfully.");
 
-	/* eslint-disable global-require */
+	// /* eslint-disable global-require */
 	const app = require("./primary-server/app");
 	const paymentApp = require("./payment-server/app");
-	/* eslint-enable global-require */
+	// /* eslint-enable global-require */
 
 	const PORT = process.env.PORT || 8080;
 

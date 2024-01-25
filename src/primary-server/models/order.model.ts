@@ -35,7 +35,8 @@ interface OrderModel extends mongoose.Model<IOrder> {
 	bookSaleStatistics(
 		type: string,
 		startDate: any,
-		endDate: any
+		endDate: any,
+		sort: string
 	): Promise<any[]>;
 }
 
@@ -256,7 +257,8 @@ orderSchema.statics.revenueAndProfitStatistics = async function (
 orderSchema.statics.bookSaleStatistics = async function (
 	type,
 	startDate,
-	endDate
+	endDate,
+	sort
 ) {
 	switch (type) {
 		case "today":
@@ -286,6 +288,22 @@ orderSchema.statics.bookSaleStatistics = async function (
 			endDate = new Date();
 			break;
 	}
+
+	let sortOptions = {};
+
+	let sortField = 'soldQuantity'; 
+	let sortOrder = -1; 
+
+	if (sort) {
+		const sortPrefix = sort[0];
+		if (sortPrefix === '-' || sortPrefix === '+') {
+			sortField = sort.substring(1);
+			sortOrder = sortPrefix === '-' ? -1 : 1;
+		}
+	}
+	
+	
+	sortOptions[sortField] = sortOrder;
 
 	const stats = await this.aggregate([
 		{
@@ -332,15 +350,13 @@ orderSchema.statics.bookSaleStatistics = async function (
 			},
 		},
 		{
-			$sort: {
-				quantity: -1,
-			},
+			$sort: sortOptions,
 		},
 	]);
 
 	const statsResult = await addMissingBooks(stats, startDate, endDate, [
 		"soldQuantity",
-	]);
+	], sortOptions);
 
 	return stats;
 };

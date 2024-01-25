@@ -17,7 +17,7 @@ export const getAllOrders = ControllerFactory.getAll(Order, {
 			select: "name email",
 		},
 	],
-	allowNestedQueries: ["userId"],
+	allowNestedQueries: ["user"],
 });
 export const getOrder = ControllerFactory.getOne(Order, {
 	populate: [
@@ -39,7 +39,7 @@ export const createOrder = async (
 	// Get user from req.user
 	const { orderDetails } = req.body;
 
-	const userId = req.body.user || req.user.id;
+	const userId = req.user.id;
 	let order;
 	// For each orderDetails, check if orderDetails.quantity <= Book.quantity
 	// Use mongoose Session to rollback if any orderDetails.quantity > Book.quantity
@@ -68,10 +68,26 @@ export const createOrder = async (
 			}
 		}
 
-		// Create order
+		const totalPrice = orderDetails.reduce((acc, item) => {
+			return acc + item.price * item.quantity;
+		}, 0);
+		const finalPrice = totalPrice;
+
 		order = await Order.create({
 			user: userId,
 			orderDetails,
+			totalPrice,
+			finalPrice,
+		});
+
+		const payment = req.request.toPaymentServer(`/api/v1/payments`, {
+			method: "POST",
+			data: {
+				user: userId,
+				totalPrice,
+				finalPrice: totalPrice,
+				order: order.id,
+			},
 		});
 
 		await session.commitTransaction();

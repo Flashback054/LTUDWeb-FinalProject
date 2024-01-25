@@ -10,13 +10,13 @@ import CreatePaymentAccountSchema from "../schemas/paymentAccount/createPaymentA
 const router = express.Router({ mergeParams: true });
 router.param("id", validateRequestId("id"));
 
-// router.get("/vnpay-return", vnpayController.vnpayReturn);
-
-router.use(authController.protect);
-
 router.get("/", paymentAccountController.getAllPaymentAccounts);
 router.get("/:id", paymentAccountController.getPaymentAccount);
-router.post("/", paymentAccountController.createPaymentAccount);
+router.post(
+	"/",
+	validateRequest(CreatePaymentAccountSchema),
+	paymentAccountController.createPaymentAccount
+);
 router.patch("/:id", paymentAccountController.updatePaymentAccount);
 router.delete("/:id", paymentAccountController.deletePaymentAccount);
 

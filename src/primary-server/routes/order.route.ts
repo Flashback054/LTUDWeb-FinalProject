@@ -12,7 +12,7 @@ const router = express.Router({ mergeParams: true });
 router.use(authController.protect);
 
 router.param("id", validateRequestId("id"));
-router.param("userId", validateRequestId("userId"));
+router.param("user", validateRequestId("user"));
 
 router.get(
 	"/",

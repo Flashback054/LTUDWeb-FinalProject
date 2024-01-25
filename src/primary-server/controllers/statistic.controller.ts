@@ -70,12 +70,13 @@ export const getBookSaleStats = async (
 	res: Response,
 	next: NextFunction
 ) => {
-	const { type, startDate, endDate } = req.query;
-
+	const { type, startDate, endDate, sort } = req.query;
+	
 	const bookSaleStats = await Order.bookSaleStatistics(
 		type as string,
 		startDate,
-		endDate
+		endDate,
+		sort as string,
 	);
 
 	res.ok(bookSaleStats);

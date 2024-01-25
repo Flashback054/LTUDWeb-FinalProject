@@ -1,6 +1,6 @@
 // @ts-nocheck
 import crypto from "crypto";
-import querystring from "querystring";
+import querystring from "qs";
 import moment from "moment";
 import { Request, Response, NextFunction } from "express";
 
@@ -58,7 +58,6 @@ export const createVNPAYCharge = async (
 	vnp_Params["vnp_SecureHash"] = signed;
 	vnpUrl += "?" + querystring.stringify(vnp_Params, { encode: false });
 
-	// Redirecting with CSP headers is not allowed, return a 200 response with the redirect URL instead
 	res.redirect(vnpUrl);
 };
 
@@ -123,8 +122,9 @@ export const vnpayReturn = async (
 			user,
 		});
 		chargedPaymentAccount.balance += chargeAmount;
+		await chargedPaymentAccount.save();
 
-		res.status(200).redirect(`${process.env.FRONTEND_URL}/customer/deposit`);
+		res.status(200).redirect(`/`);
 	} else {
 		// Thanh toán thất bại. Kiểm tra rspCode để biết lý do thất bại
 
@@ -168,12 +168,12 @@ export const vnpayReturn = async (
 		chargeHistory.chargeError = errMessage;
 		await chargeHistory.save();
 
-		res.status(200).redirect(`${process.env.FRONTEND_URL}/customer/deposit`);
+		res.status(200).redirect(`/`);
 	}
 };
 
 // Sort OBJ function provided by VNPAY
-function sortObject(obj: object) {
+function sortObject(obj) {
 	let sorted = {};
 	let str = [];
 	let key;

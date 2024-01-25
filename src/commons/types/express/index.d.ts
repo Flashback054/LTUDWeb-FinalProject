@@ -1,11 +1,17 @@
 import { IUser } from "../../../primary-server/models/user.model";
 import { IOrder } from "../../../primary-server/models/order.model";
+import { RequestOptions } from "https";
 
+interface IRequestToServer {
+	toPrimaryServer: (url?: string, options?: any) => Promise<any>;
+	toPaymentServer: (url?: string, options?: any) => Promise<any>;
+}
 declare global {
 	namespace Express {
 		interface Request {
 			user: IUser;
 			order: IOrder;
+			request: IRequestToServer;
 		}
 
 		interface Response {

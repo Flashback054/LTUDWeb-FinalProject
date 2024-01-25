@@ -1,7 +1,5 @@
 import express from "express";
 import "express-async-errors";
-import path from "path";
-import { create } from "express-handlebars";
 import cookieParser from "cookie-parser";
 import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
