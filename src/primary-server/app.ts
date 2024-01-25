@@ -73,6 +73,26 @@ const hbs = create({
 
       return result;
     },
+    removeQueryParamFromUrl(url: string, param: string) {
+      const result = url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
+
+      if (result.includes("?")) {
+        return result.concat("&");
+      }
+
+      return result.concat("?");
+    },
+    removeQueryParamsFromUrl(url: string, ...params: [string]) {
+      for (const param of params) {
+        url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
+      }
+
+      if (url.includes("?")) {
+        return url.concat("&");
+      }
+
+      return url.concat("?");
+    },
   },
 });
 app.engine("html", hbs.engine);

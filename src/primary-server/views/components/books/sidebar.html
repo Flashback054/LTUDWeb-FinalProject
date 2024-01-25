@@ -1,9 +1,48 @@
 <div>
-  <section>search box</section>
+  <h2 class="text-xl font-bold uppercase mb-9">Bộ lọc sản phẩm</h2>
 
-  <section>categories</section>
+  <section class="flex flex-col items-start gap-2 mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-4 text-white uppercase parallelogram bg-primary"
+    >
+      Tìm kiếm theo tựa sách
+    </h3>
+    <form action="/books" class="flex overflow-hidden border rounded-md">
+      <label for="book-query" class="sr-only">Tìm kiếm sách theo tựa</label>
+      <input
+        type="text"
+        id="book-query"
+        name="q"
+        class="px-3 py-2 border-0 placeholder:text-sm"
+        placeholder="Tìm kiếm sách theo tựa..."
+      />
+      <button class="px-4 text-white bg-primary" aria-label="Tìm kiếm">
+        <i class="fa-solid fa-magnifying-glass" role="presentation"></i>
+      </button>
+    </form>
+  </section>
 
-  <section>price range</section>
+  <section class="flex flex-col items-start mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-8 text-white uppercase parallelogram bg-primary"
+    >
+      Danh mục sách
+    </h3>
+  </section>
 
-  <section>rating</section>
+  <section class="flex flex-col items-start mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-8 text-white uppercase parallelogram bg-primary"
+    >
+      Lọc theo khoảng giá
+    </h3>
+  </section>
+
+  <section class="flex flex-col items-start mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-8 text-white uppercase parallelogram bg-primary"
+    >
+      Lọc theo đánh giá
+    </h3>
+  </section>
 </div>
