@@ -1,0 +1,20 @@
+<section class="py-8">
+  <h3
+    class="px-2 py-1 mx-auto mb-8 text-2xl font-bold text-center gradient-heading w-fit"
+  >
+    Sách nổi bật
+  </h3>
+  <ul class="flex flex-wrap justify-center gap-4 mb-6">
+    {{#each top5HighRatedBooks as |book|}}
+    <li class="max-w-[230px] min-w-[120px]">
+      {{#with book}}
+      <!--  -->
+      {{> book-card}}
+      <!--  -->
+      {{/with}}
+    </li>
+    {{/each}}
+  </ul>
+
+  <div class="text-center">{{> shop-now-button}}</div>
+</section>

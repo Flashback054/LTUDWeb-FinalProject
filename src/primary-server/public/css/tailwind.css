@@ -2,41 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --font-heading: "Bricolage Grotesque", sans-serif;
-  /* --font-body: "Noto Sans Display", sans-serif; */
-  --font-body: "Open Sans", sans-serif;
+@layer base {
+  :root {
+    --font-heading: "Bricolage Grotesque", sans-serif;
+    /* --font-body: "Noto Sans Display", sans-serif; */
+    --font-body: "Open Sans", sans-serif;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 4rem;
+  }
+
+  body {
+    min-height: 100vh;
+    min-height: 100svh;
+    font-family: var(--font-body);
+
+    @apply antialiased text-gray-600;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+    overflow-wrap: break-word;
+    text-wrap: balance;
+    hyphens: auto;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    vertical-align: middle;
+    font-style: italic;
+    background-repeat: no-repeat;
+    background-size: cover;
+    shape-margin: 0.75rem;
+    object-fit: cover;
+    object-position: center;
+    font-size: 0.75rem;
+  }
 }
 
-body {
-  min-height: 100vh;
-  min-height: 100svh;
-  font-family: var(--font-body);
+@layer utilities {
+  .site-container {
+    @apply container px-4 mx-auto;
+  }
 
-  @apply antialiased text-gray-600;
-}
+  .font-heading {
+    font-family: var(--font-heading);
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-heading);
-  overflow-wrap: break-word;
-  text-wrap: balance;
-  hyphens: auto;
-}
+  .font-body {
+    font-family: var(--font-body);
+  }
 
-img {
-  max-width: 100%;
-  height: auto;
-  vertical-align: middle;
-  font-style: italic;
-  background-repeat: no-repeat;
-  background-size: cover;
-  shape-margin: 0.75rem;
-  object-fit: cover;
-  object-position: center;
-  font-size: 0.75rem;
+  .gradient-heading {
+    @apply text-white uppercase rounded-sm bg-gradient-to-tr from-green-500 to-green-600;
+  }
+
+  .parallelogram {
+    @apply px-4 py-2;
+    clip-path: polygon(0 0, 95% 0, 100% 100%, 5% 100%);
+  }
 }

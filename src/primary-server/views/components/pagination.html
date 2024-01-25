@@ -1,0 +1,38 @@
+{{#with pagination}}
+<nav aria-label="Điều hướng trang" id="book-pagination">
+  <ul class="flex justify-center gap-2 my-8 text-lg">
+    <li>
+      <a
+        class="flex items-center justify-center px-3 py-1 border border-gray-900 rounded-full data-[ok=false]:bg-gray-200 data-[ok=false]:pointer-events-none"
+        href="{{removeQueryParamFromUrl currentUrl 'page'}}page={{prevPage}}"
+        data-ok="{{hasPrevPage}}"
+      >
+        <span aria-hidden="true">&laquo;</span>
+        <span class="sr-only">Trang trước</span>
+      </a>
+    </li>
+    {{#each pageList as |pageNumber|}}
+    <li>
+      <a
+        class="flex items-center justify-center px-3 py-1 border border-gray-900 rounded-full data-[current=true]:bg-green-200 data-[current=true]:pointer-events-none"
+        href="{{removeQueryParamFromUrl ../currentUrl 'page'}}page={{pageNumber}}"
+        data-current="false"
+        data-page="{{pageNumber}}"
+        >{{pageNumber}}</a
+      >
+    </li>
+    {{/each}}
+    <li>
+      <a
+        class="flex items-center justify-center px-3 py-1 border border-gray-900 rounded-full data-[ok=false]:bg-gray-200 data-[ok=false]:pointer-events-none"
+        href="{{removeQueryParamFromUrl currentUrl 'page'}}page={{nextPage}}"
+        data-ok="{{hasNextPage}}"
+      >
+        <span aria-hidden="true">&raquo;</span>
+        <span class="sr-only">Trang sau</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+{{/with}}

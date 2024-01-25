@@ -1,0 +1,14 @@
+{{#if bookCategories.length}}
+<!--  -->
+{{#each bookCategories}}
+<li>
+  <a
+    href="/books?category={{this._id}}"
+    class="px-3 py-1 border-2 rounded-full hover:text-gray-900 hover:bg-green-200 border-primary"
+  >
+    {{this.name}}
+  </a>
+</li>
+{{/each}}
+<!--  -->
+{{/if}}

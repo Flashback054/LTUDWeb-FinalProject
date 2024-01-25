@@ -1,0 +1,19 @@
+<a href="/books/{{_id}}" title="{{name}}">
+  <figure
+    class="flex flex-col h-full p-4 transition-all border-2 border-gray-400 rounded-md hover:border-green-500 hover:shadow-md hover:bg-gradient-to-br from-green-50 to-green-100 hover:scale-[1.01] hover:border-dashed"
+  >
+    <img src="{{image}}" alt="{{name}}" class="mb-2 rounded-md" />
+    <figcaption
+      class="flex flex-col justify-between flex-1 gap-1 my-2 text-sm text-center"
+    >
+      <section>
+        <h3 class="text-sm font-bold line-clamp-1">{{name}}</h3>
+        <p class="italic line-clamp-1">{{author}}</p>
+      </section>
+      <span class="text-xs text-yellow-500"
+        >{{{ratingStar ratingsAverage}}}</span
+      >
+      <p class="font-medium text-orange-600">{{currencyFormat sellingPrice}}</p>
+    </figcaption>
+  </figure>
+</a>

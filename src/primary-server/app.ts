@@ -40,17 +40,58 @@ app.enable("trust proxy");
 
 // View engine
 const hbs = create({
-	extname: ".html",
-	layoutsDir: `${__dirname}/views/layouts`,
-	partialsDir: `${__dirname}/views/components/`,
-	helpers: {
-		currencyFormat(value: number | bigint) {
-			return Intl.NumberFormat("vi-VN", {
-				style: "currency",
-				currency: "VND",
-			}).format(value);
-		},
-	},
+  extname: ".html",
+  layoutsDir: `${__dirname}/views/layouts`,
+  partialsDir: `${__dirname}/views/components/`,
+  helpers: {
+    currencyFormat(value: number | bigint) {
+      return Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      }).format(value);
+    },
+    currentYear() {
+      return new Date().getFullYear();
+    },
+    ratingStar(rating: number) {
+      const wholeRating = Math.floor(rating);
+      let result = "";
+
+      for (let i = 0; i < wholeRating; i++) {
+        result += `<i class="fas fa-star"></i>`;
+      }
+
+      if (rating > wholeRating) {
+        result += `<i class="fas fa-star-half-alt"></i>`;
+      }
+
+      for (let i = 0; i < 5 - Math.ceil(rating); i++) {
+        result += `<i class="far fa-star"></i>`;
+      }
+
+      return result;
+    },
+    removeQueryParamFromUrl(url: string, param: string) {
+      const result = url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
+
+      if (result.includes("?")) {
+        return result.concat("&");
+      }
+
+      return result.concat("?");
+    },
+    removeQueryParamsFromUrl(url: string, ...params: [string]) {
+      for (const param of params) {
+        url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
+      }
+
+      if (url.includes("?")) {
+        return url.concat("&");
+      }
+
+      return url.concat("?");
+    },
+  },
 });
 app.engine("html", hbs.engine);
 app.set("views", path.join(__dirname, "views"));
@@ -66,24 +107,27 @@ app.use(
 app.options("*", cors());
 
 app.use(
-	helmet({
-		crossOriginEmbedderPolicy: false,
-		crossOriginResourcePolicy: {
-			policy: "cross-origin",
-		},
-		contentSecurityPolicy: {
-			directives: {
-				formAction: ["*"],
-				defaultSrc: ["*"],
-				scriptSrc: [
-					"* data: 'unsafe-eval' 'unsafe-inline' blob: https://sandbox.vnpayment.vn",
-				],
-				connectSrc: ["*", "https://sandbox.vnpayment.vn"],
-				frameSrc: ["*", "https://sandbox.vnpayment.vn"],
-				navigateTo: ["*"],
-			},
-		},
-	})
+  helmet({
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: {
+      policy: "cross-origin",
+    },
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["*"],
+        scriptSrc: [
+          "* data: 'unsafe-eval' 'unsafe-inline' blob: https://sandbox.vnpayment.vn",
+        ],
+        connectSrc: ["*", "https://sandbox.vnpayment.vn"],
+        frameSrc: ["*", "https://sandbox.vnpayment.vn"],
+        imgSrc: [
+          "http://localhost:8080/",
+          "https://res.cloudinary.com",
+          "data:",
+        ],
+      },
+    },
+  })
 );
 
 app.use(mongoSanitize());

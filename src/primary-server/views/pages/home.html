@@ -1,1 +1,23 @@
-<h1 class="text-3xl text-sky-500">Hello world</h1>
+<main>
+  {{> layout/hero}}
+  <!--  -->
+  {{> separator}}
+  <!--  -->
+  <div class="min-h-[400px] site-container space-y-8 py-16">
+    {{> home/top-categories}}
+    <!--  -->
+    {{> separator}}
+    <!--  -->
+    {{> home/top-rated-books}}
+    <!--  -->
+    {{> separator}}
+    <!--  -->
+    {{> home/recently-added-books}}
+  </div>
+  <!--  -->
+  {{> separator}}
+  <!--  -->
+  {{> newsletter-signup-form}}
+  <!--  -->
+  {{> dot-separator}}
+</main>

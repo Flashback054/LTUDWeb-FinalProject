@@ -1,0 +1,188 @@
+<div>
+  <h2 class="text-xl font-bold uppercase mb-9">Bộ lọc sản phẩm</h2>
+
+  <section class="flex flex-col items-start gap-2 mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-4 text-white uppercase parallelogram bg-primary"
+    >
+      Tìm kiếm theo tựa sách
+    </h3>
+    <form
+      action="{{pagination.currentUrl}}"
+      class="flex overflow-hidden border rounded-md"
+    >
+      <label for="book-query" class="sr-only">Tìm kiếm sách theo tựa</label>
+      <input
+        type="text"
+        id="book-query"
+        name="q"
+        value="{{q}}"
+        class="px-3 py-2 border-0 placeholder:text-sm"
+        placeholder="Tìm kiếm sách theo tựa..."
+      />
+      <button class="px-4 text-white bg-primary" aria-label="Tìm kiếm">
+        <i class="fa-solid fa-magnifying-glass" role="presentation"></i>
+      </button>
+    </form>
+  </section>
+
+  <section class="flex flex-col items-start mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-4 text-white uppercase parallelogram bg-primary"
+    >
+      Danh mục sách
+    </h3>
+
+    <div
+      class="self-stretch p-4 space-y-2 border-2 border-gray-700 border-dashed rounded-md"
+    >
+      <a
+        href="/books"
+        class="hover:underline underline-offset-2 decoration-primary decoration-2"
+        >Tất cả danh mục</a
+      >
+      <details class="group" id="category-details">
+        <summary
+          class="flex items-center justify-between px-1 mb-2 -mx-1 list-none rounded-sm cursor-pointer"
+        >
+          <span>Các danh mục cụ thể</span>
+          <span class="group-open:rotate-180">
+            <i class="fa-solid fa-chevron-down"></i>
+          </span>
+        </summary>
+        <ul class="ml-4 space-y-2" id="category-links">
+          {{#each categories}}
+          <li>
+            <a
+              data-id="{{this._id}}"
+              data-current="false"
+              class="hover:underline data-[current=true]:underline underline-offset-2 decoration-primary decoration-2"
+              href="/books?category={{this._id}}"
+              >{{this.name}}</a
+            >
+          </li>
+          {{/each}}
+        </ul>
+      </details>
+    </div>
+  </section>
+
+  <section class="flex flex-col items-start mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-4 text-white uppercase parallelogram bg-primary"
+    >
+      Lọc theo khoảng giá
+    </h3>
+
+    <fieldset
+      class="self-stretch p-4 space-y-2 text-sm border-2 border-gray-700 border-dashed rounded-md"
+      id="price-range-filter"
+    >
+      <legend class="sr-only">Lọc theo khoảng giá</legend>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="priceRange" value="all" id="all-price" />
+        <label for="all-price">Tất cả khoảng giá</label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="priceRange" value="0-50" id="_0-50" />
+        <label for="_0-50"> Giá dưới {{currencyFormat '50000'}} </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="priceRange" value="50-100" id="_50-100" />
+        <label for="_50-100">
+          {{currencyFormat '50000'}} - {{currencyFormat '100000'}}
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="priceRange" value="100-200" id="_100-200" />
+        <label for="_100-200">
+          {{currencyFormat '100000'}} - {{currencyFormat '200000'}}
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="priceRange" value="200-500" id="_200-500" />
+        <label for="_200-500">
+          {{currencyFormat '200000'}} - {{currencyFormat '500000'}}
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="priceRange" value="500-" id="_500-" />
+        <label for="_500-"> Giá trên {{currencyFormat '500000'}} </label>
+      </div>
+    </fieldset>
+  </section>
+
+  <section class="flex flex-col items-start mb-8">
+    <h3
+      class="self-start px-2 py-1 mb-4 text-white uppercase parallelogram bg-primary"
+    >
+      Lọc theo đánh giá
+    </h3>
+
+    <fieldset
+      class="self-stretch p-4 space-y-2 text-sm border-2 border-gray-700 border-dashed rounded-md"
+      id="rating-filter"
+    >
+      <legend class="sr-only">Lọc theo đánh giá</legend>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="ratingRange" value="all" id="all-rating" />
+        <label for="all-rating"> Tất cả đánh giá </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="ratingRange" value="0-2" id="_0-2" />
+        <label for="_0-2">
+          Bé hơn 2 <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="ratingRange" value="2-4" id="_2-4" />
+        <label for="_2-4">
+          Từ 2 <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i> đến 4
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+        </label>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <input type="radio" name="ratingRange" value="4-5" id="_4-5" />
+        <label for="_4-5">
+          Từ 4
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i
+          ><i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i> đến 5
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i
+          ><i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+          <i class="text-yellow-500 fa-xs fa-solid fa-star"></i>
+        </label>
+      </div>
+    </fieldset>
+  </section>
+
+  <div>
+    <div class="my-4">{{> separator}}</div>
+
+    <button
+      id="remove-filter-btn"
+      class="w-full text-center text-white bg-red-600 parallelogram"
+    >
+      <span>Xóa bộ lọc</span>
+      <i class="fa-solid fa-filter-circle-xmark"></i>
+    </button>
+  </div>
+</div>
