@@ -5,7 +5,7 @@ export async function addMissingBooks(
 	startDate,
 	endDate,
 	keys,
-	sortOptions
+	sortOptions,
 ) {
 	if (statisticResult.length === 0) return statisticResult;
 
@@ -29,11 +29,19 @@ export async function addMissingBooks(
 		}
 	}
 
-	return statisticResult.sort((a, b) => {
-		if (a.id > b.id) return 1;
-		if (a.id < b.id) return -1;
-		return 0;
-	});
+	if (sortOptions && Object.keys(sortOptions).length > 0) {
+		const sortField = Object.keys(sortOptions)[0];
+		const sortOrder = sortOptions[sortField];
+		statisticResult.sort((a, b) => {
+			if (sortOrder === 1) {
+				return a[sortField] > b[sortField] ? 1 : -1;
+			} else {
+				return a[sortField] < b[sortField] ? 1 : -1;
+			}
+		});
+	}
+
+	return statisticResult;
 }
 
 export function addMissingDates(statisticResult, startDate, endDate, keys) {
