@@ -85,12 +85,13 @@
       if (bookPagination) {
         const bookNavigationLinks = bookPagination.querySelectorAll("a");
         const searchParams = new URLSearchParams(location.search);
-        const page = +searchParams.get("page") ?? 1;
+        const page = searchParams.get("page") ? +searchParams.get("page") : 1;
 
         bookNavigationLinks.forEach((link) => {
           const pageNumber = +link.getAttribute("data-page");
 
           if (pageNumber == page) {
+            console.log(pageNumber, page);
             link.dataset.current = true;
           } else {
             link.dataset.current = false;
