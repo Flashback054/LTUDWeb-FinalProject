@@ -5,7 +5,7 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   const [top5HighRatedBooks, top5RecentlyAddedBooks] = await Promise.all([
-    Book.find({}).sort({ rating: -1 }).limit(5).lean(),
+    Book.find({}).sort({ rating: -1, name: -1 }).limit(5).lean(),
     Book.find({}).sort({ createdAt: -1 }).limit(5).lean(),
   ]);
 

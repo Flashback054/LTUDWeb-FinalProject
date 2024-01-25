@@ -55,6 +55,24 @@ const hbs = create({
     currentYear() {
       return new Date().getFullYear();
     },
+    ratingStar(rating: number) {
+      const wholeRating = Math.floor(rating);
+      let result = "";
+
+      for (let i = 0; i < wholeRating; i++) {
+        result += `<i class="fas fa-star"></i>`;
+      }
+
+      if (rating > wholeRating) {
+        result += `<i class="fas fa-star-half-alt"></i>`;
+      }
+
+      for (let i = 0; i < 5 - Math.ceil(rating); i++) {
+        result += `<i class="far fa-star"></i>`;
+      }
+
+      return result;
+    },
   },
 });
 app.engine("html", hbs.engine);

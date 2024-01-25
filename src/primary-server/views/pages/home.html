@@ -1,14 +1,23 @@
 <div>
   {{> layout/hero}}
   <!--  -->
-  <div class="min-h-[400px] site-container space-y-8">
+  {{> separator}}
+  <!--  -->
+  <div class="min-h-[400px] site-container space-y-8 py-16">
     {{> home/top-categories}}
+    <!--  -->
+    {{> separator}}
     <!--  -->
     {{> home/top-rated-books}}
     <!--  -->
-
-    <div>recently added books</div>
+    {{> separator}}
+    <!--  -->
+    {{> home/recently-added-books}}
   </div>
   <!--  -->
+  {{> separator}}
+  <!--  -->
   {{> newsletter-signup-form}}
+  <!--  -->
+  {{> dot-separator}}
 </div>
