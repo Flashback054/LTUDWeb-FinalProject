@@ -1,5 +1,5 @@
 <nav class="sticky top-0 z-50 bg-white border-b shadow-sm" id="main-nav">
-  <ul class="flex justify-center gap-1 site-container">
+  <ul class="relative flex justify-center gap-1 site-container">
     <li>
       <a
         class="inline-block px-4 py-3 font-bold uppercase hover:text-primary"
@@ -7,13 +7,18 @@
         >Trang chủ</a
       >
     </li>
-    <li>
+    <li class="group">
       <ul
-        class="inline-block px-4 py-3 space-x-1 font-bold uppercase hover:text-primary"
+        class="absolute z-50 flex-wrap hidden gap-4 px-20 py-4 text-sm bg-white border-t-4 border-[#d0e7e2] rounded-md shadow-md left-1/4 right-1/4 peer top-full group-hover:flex"
+      >
+        {{> category-drop-down}}
+      </ul>
+      <span
+        class="hidden px-4 py-3 font-bold uppercase peer-has-[li]:inline-block group-hover:text-primary"
       >
         Danh mục
         <i class="fa-solid fa-chevron-down"></i>
-      </ul>
+      </span>
     </li>
     <li>
       <a
