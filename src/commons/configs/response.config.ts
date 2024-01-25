@@ -13,7 +13,6 @@ const requestTemplate = (req: Request, res: Response, url: string) => {
 		try {
 			options = options || {};
 			path = path || req.originalUrl;
-			console.log(`${url}${path}`);
 
 			const response = await axios({
 				url: `${url}${path}`,

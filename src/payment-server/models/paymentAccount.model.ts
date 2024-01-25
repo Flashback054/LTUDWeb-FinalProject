@@ -31,10 +31,6 @@ const paymentAccountSchema = new mongoose.Schema<IPaymentAccount>(
 		toJSON: {
 			virtuals: true,
 			versionKey: false,
-			transform: function (doc, ret) {
-				ret.id = ret._id;
-				delete ret.isAdminAccount;
-			},
 		},
 	}
 );

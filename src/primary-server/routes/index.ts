@@ -9,6 +9,7 @@ import StatisticRouter from "./statistic.route";
 import UserRouter from "./user.route";
 import ChargeHistoryRouter from "./chargeHistory.route";
 import PaymentAcountRouter from "./paymentAccount.route";
+import PaymentRouter from "./payment.route";
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use("/categories", CategoryRouter);
 router.use("/reviews", ReviewRouter);
 router.use("/charge-histories", ChargeHistoryRouter);
 router.use("/payment-accounts", PaymentAcountRouter);
+router.use("/payments", PaymentRouter);
 
 export default router;

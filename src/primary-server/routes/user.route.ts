@@ -1,17 +1,19 @@
 import express from "express";
 import * as userController from "../controllers/user.controller";
 import * as authController from "../controllers/auth.controller";
-import orderRouter from "./order.route";
+import OrderRouter from "./order.route";
+import PaymentRouter from "./payment.route";
+import allowNestedQueries from "../../commons/middlewares/allowNestedQueries";
 import { setImagePath } from "../../commons/controllers";
 import { validateRequestId } from "../../commons/middlewares/validateRequest";
 
 const router = express.Router();
 router.param("id", validateRequestId("id"));
-router.param("userId", validateRequestId("userId"));
+router.param("user", validateRequestId("user"));
 
 // Orders belong to a user
-router.use("/:userId/orders", orderRouter);
-// router.use("/:userId/payments", paymentRouter);
+router.use("/:user/orders", allowNestedQueries("user"), OrderRouter);
+router.use("/:user/payments", allowNestedQueries("user"), PaymentRouter);
 
 router.use(authController.protect, authController.restrictTo("admin"));
 

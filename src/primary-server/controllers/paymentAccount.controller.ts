@@ -24,6 +24,22 @@ export const getPaymentAccount = async (
 	res.ok(paymentAccount);
 };
 
+export const getMyPaymentAccount = async (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => {
+	const userId = req.user?.id;
+	const paymentAccount = await req.request.toPaymentServer(
+		`/api/v1/payment-accounts?user=${userId}`,
+		{
+			method: "GET",
+		}
+	);
+
+	res.ok(paymentAccount);
+};
+
 export const createPaymentAccount = async (
 	req: Request,
 	res: Response,

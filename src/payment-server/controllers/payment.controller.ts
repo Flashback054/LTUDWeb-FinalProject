@@ -32,7 +32,9 @@ export const createPayment = async (
 	try {
 		const { finalPrice, user } = req.body;
 		const userAccount = await PaymentAccount.findOne({ user });
-		const adminAccount = await PaymentAccount.findOne({ isAdminAccount: true });
+		const adminAccount = await PaymentAccount.findOne({
+			isAdminAccount: true,
+		});
 
 		if (userAccount.balance >= finalPrice) {
 			const newPayment = await Payment.create(req.body);

@@ -38,24 +38,22 @@ export const getRecommendationBooks = async (
 ) => {
 	const book = await Book.findById(req.params.id);
 
-	let recommendedBooks = await Book.find(
-		{_id: { $ne: book._id }, 
-		category: book.category})
-			.sort({ ratingsAverage: -1 })
-			.limit(10)
-			.lean();
-
-	if (recommendedBooks.length === 0) {
-		recommendedBooks = await Book.find({
-			_id: { $ne: book._id }
-		})
+	let recommendedBooks = await Book.find({
+		_id: { $ne: book._id },
+		category: book.category,
+	})
 		.sort({ ratingsAverage: -1 })
 		.limit(10)
 		.lean();
+
+	if (recommendedBooks.length === 0) {
+		recommendedBooks = await Book.find({
+			_id: { $ne: book._id },
+		})
+			.sort({ ratingsAverage: -1 })
+			.limit(10)
+			.lean();
 	}
 
-	res.ok({
-		data: recommendedBooks
-	});
-
+	res.ok(recommendedBooks);
 };

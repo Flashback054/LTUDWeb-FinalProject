@@ -40,12 +40,4 @@ router
 	)
 	.delete(orderController.checkOrderOwnership, orderController.deleteOrder);
 
-// A route to pay for an order
-router.post(
-	"/:id/pay",
-	orderController.checkOrderOwnership,
-	orderController.checkOrderStatus,
-	orderController.payOrder
-);
-
 export default router;

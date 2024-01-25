@@ -37,6 +37,14 @@ export const signup = async (
 	// Remove password from user object
 	user.password = undefined;
 
+	// Send request to create payment account
+	await req.request.toPaymentServer("/api/v1/payment-accounts", {
+		method: "POST",
+		data: {
+			user: user._id,
+		},
+	});
+
 	const { accessToken, accessTokenOptions } = createAccessToken(user, req);
 
 	res.cookie("accessToken", accessToken, accessTokenOptions);
@@ -303,8 +311,6 @@ export const googleLogin = async (
 	const user = req.user as unknown as GoogleUser;
 	const profile = user._json;
 
-	console.log("Google profile: ", profile);
-
 	// 2) Check if googleId exists in database
 	let existingUser = await User.findOne({ googleId: profile.sub });
 
@@ -317,6 +323,14 @@ export const googleLogin = async (
 			email: profile.email,
 			image: profile.picture,
 			imagePublicId: undefined,
+		});
+
+		// Send request to create payment account
+		await req.request.toPaymentServer("/api/v1/payment-accounts", {
+			method: "POST",
+			data: {
+				user: existingUser._id,
+			},
 		});
 	}
 
