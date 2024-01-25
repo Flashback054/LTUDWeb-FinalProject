@@ -60,4 +60,8 @@
   .font-body {
     font-family: var(--font-body);
   }
+
+  .gradient-heading {
+    @apply text-white uppercase rounded-sm bg-gradient-to-tr from-green-500 to-green-600;
+  }
 }

@@ -1,7 +1,66 @@
 <div>
   {{> layout/hero}}
   <!--  -->
-  <div class="h-[400px]"></div>
+  <div class="min-h-[400px] site-container space-y-8">
+    <section class="py-8">
+      <h3
+        class="px-2 py-1 mx-auto mb-6 text-2xl font-bold text-center gradient-heading w-fit"
+      >
+        Danh mục nổi bật
+      </h3>
+      <ul class="grid grid-cols-3 gap-4">
+        <li
+          class="transition-all border-2 border-gray-500 rounded-md hover:shadow-lg hover:bg-green-100 hover:border-gray-700"
+        >
+          <a
+            href="/books?category=6585555f703fca1356f60b88"
+            class="flex items-center justify-between gap-2"
+          >
+            <span class="flex-1 px-4 text-xl font-heading">Sách mẹ và bé</span>
+            <img
+              src="/images/me-va-be.webp"
+              alt="Sách mẹ và bé"
+              class="h-[160px]"
+            />
+          </a>
+        </li>
+        <li
+          class="transition-all border-2 border-gray-500 rounded-md hover:shadow-lg hover:bg-green-100 hover:border-gray-700"
+        >
+          <a
+            href="/books?category=6585555f703fca1356f60b87"
+            class="flex items-center justify-between gap-2"
+          >
+            <span class="flex-1 px-4 text-xl font-heading"
+              >Sách kỹ năng sống</span
+            >
+            <img
+              src="/images/ky-nang-song.webp"
+              alt="Sách kỹ năng sống"
+              class="h-[160px]"
+            />
+          </a>
+        </li>
+        <li
+          class="transition-all border-2 border-gray-500 rounded-md hover:shadow-lg hover:bg-green-100 hover:border-gray-700"
+        >
+          <a
+            href="/books?category=6585555f703fca1356f60b85"
+            class="flex items-center justify-between gap-2"
+          >
+            <span class="flex-1 px-4 text-xl font-heading">Sách kinh tế</span>
+            <img
+              src="/images/sach-kinh-te.webp"
+              alt="Sách kỹ năng sống"
+              class="h-[160px]"
+            />
+          </a>
+        </li>
+      </ul>
+    </section>
+    <div>top 5 rating books</div>
+    <div>recently added books</div>
+  </div>
   <!--  -->
   {{> newsletter-signup-form}}
 </div>
