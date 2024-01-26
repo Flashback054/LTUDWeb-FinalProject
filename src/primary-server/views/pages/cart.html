@@ -5,9 +5,15 @@
     Giỏ hàng của bạn
   </h1>
   <div
-    class="p-8 space-y-6 border-2 border-green-200 rounded-md shadow-md bg-green-50 hover:border-dashed hover:border-primary"
+    class="p-8 space-y-6 border-2 border-green-200 rounded-md shadow-md bg-green-50 hover:border-dashed hover:border-primary aria-hidden:hidden"
   >
-    <table class="w-full border-collapse table-auto">
+    <table class="w-full border-collapse table-auto" id="cart-content-table">
+      <colgroup>
+        <col class="w-[50%]" />
+        <col class="w-[13%]" />
+        <col class="w-[17%]" />
+        <col class="w-[20%]" />
+      </colgroup>
       <thead>
         <tr class="bg-gray-500 text-gray-50">
           <th class="px-4 py-2 text-start">Sản phẩm</th>
@@ -16,31 +22,12 @@
           <th class="px-4 py-2 text-start">Thành tiền</th>
         </tr>
       </thead>
-      <tbody>
-        <tr class="border-b-2 border-gray-400 odd:bg-gray-50 even:bg-gray-100">
-          <td class="px-4 py-8">
-            The Sliding Mr. Bones (Next Stop, Pottersville)
-          </td>
-          <td class="px-4 py-8">Malcolm Lockyer</td>
-          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
-          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
-        </tr>
-        <tr class="border-b-2 border-gray-400 odd:bg-gray-50 even:bg-white">
-          <td class="px-4 py-8">
-            The Sliding Mr. Bones (Next Stop, Pottersville)
-          </td>
-          <td class="px-4 py-8">Malcolm Lockyer</td>
-          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
-          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
-        </tr>
-      </tbody>
+      <tbody></tbody>
     </table>
 
     <div class="pr-4 space-x-12 text-end">
       <span class="text-xl font-medium font-heading">Tổng số thành tiền: </span>
-      <span class="text-2xl font-bold text-primary">
-        {{currencyFormat '200000'}}
-      </span>
+      <span class="text-2xl font-bold text-primary" id="cart-total"> </span>
     </div>
 
     <div class="flex justify-end gap-3">
@@ -58,7 +45,11 @@
     </div>
   </div>
 
-  <!-- <div class="p-4 text-center border-2 rounded-md border-primary bg-green-50">
+  <div
+    id="empty-cart-message"
+    aria-hidden="true"
+    class="p-4 text-center border-2 rounded-md border-primary bg-green-50 aria-hidden:hidden"
+  >
     <p>Không có sản phẩm nào trong giỏ hàng của bạn.</p>
     <p>
       Hãy quay lại
@@ -69,5 +60,5 @@
       >
       và thêm vào giỏ hàng của bạn
     </p>
-  </div> -->
+  </div>
 </main>
