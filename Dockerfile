@@ -1,4 +1,4 @@
-FROM node:lts-alpine
+FROM node:20.4.0-alpine
 
 # Create app directory
 WORKDIR /app
@@ -19,8 +19,13 @@ COPY . .
 # Build the app
 RUN yarn build
 
+# Copy the public and views folders to /app/dist
+RUN cp -r src/primary-server/public dist/src/primary-server/public
+RUN cp -r src/primary-server/views dist/src/primary-server/views
+
 # Run the app
 CMD ["yarn", "run", "start:prod"]
 
 # Expose port 8080
 EXPOSE 8080
+EXPOSE 6969

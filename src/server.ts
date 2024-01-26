@@ -33,7 +33,7 @@ mongoose.connect(DB).then(async (con) => {
 		console.log(`Server started! Listening on port ${PORT}`);
 	});
 	paymentServer = paymentApp.listen(
-		process.env.PAYMENT_SERVER_PORT,
+		process.env.PAYMENT_SERVER_PORT || 6969,
 		"0.0.0.0",
 		() => {
 			console.log(
