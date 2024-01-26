@@ -153,9 +153,26 @@ router.get("/books/:id", async (req, res) => {
   const { id } = req.params;
   const book = await Book.findById(id).populate("category").lean();
 
+  const recommendedBooks = await Book.find({
+    $and: [
+      { _id: { $ne: id } },
+      {
+        $or: [
+          { category: book.category._id },
+          { author: book.author },
+          { ratingsAverage: { $gte: 3 } },
+        ],
+      },
+    ],
+  })
+    .sort({ rating: -1 })
+    .limit(10)
+    .lean();
+
   res.render("pages/books/show", {
     title: book.name,
     book,
+    recommendedBooks,
   });
 });
 

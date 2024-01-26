@@ -3,11 +3,11 @@
     Thông tin sách
   </h1>
 
-  <div class="grid grid-cols-12 gap-x-8 gap-y-12">
+  <div class="grid grid-cols-12 gap-x-4 gap-y-12">
     <img
       src="{{book.image}}"
-      alt="{{book.name}}"
-      class="col-span-3 rounded-md"
+      alt="Bìa sách của {{book.name}}"
+      class="sticky col-span-3 rounded-md top-20"
     />
     <section class="col-span-9 p-4 space-y-4 bg-gray-100 rounded-md">
       <h2 class="text-xl font-bold">{{book.name}}</h2>
@@ -48,12 +48,22 @@
       </details>
     </section>
 
-    <section class="col-span-12">
-      <h3
-        class="px-4 py-1 mx-auto mb-4 text-2xl uppercase w-fit gradient-heading"
-      >
+    <section class="col-span-9 col-start-4">
+      <h3 class="px-4 py-1 mb-4 text-lg uppercase w-fit gradient-heading">
         Có thể bạn sẽ thích
       </h3>
+
+      <ul class="flex gap-3 pb-4 overflow-auto">
+        {{#each recommendedBooks}}
+        <li class="min-w-40">
+          {{#with this}}
+          <!--  -->
+          {{> book-card}}
+          <!--  -->
+          {{/with}}
+        </li>
+        {{/each}}
+      </ul>
     </section>
   </div>
 </main>
