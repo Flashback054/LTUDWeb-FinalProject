@@ -176,4 +176,10 @@ router.get("/books/:id", async (req, res) => {
   });
 });
 
+router.get("/cart", (req, res) => {
+  res.render("pages/cart", {
+    title: "Fohoso - Giỏ hàng",
+  });
+});
+
 export default router;

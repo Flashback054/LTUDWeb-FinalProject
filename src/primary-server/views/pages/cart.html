@@ -1,0 +1,73 @@
+<main class="max-w-4xl px-4 py-16 mx-auto">
+  <h1
+    class="px-4 py-1 mb-8 text-2xl uppercase w-fit parallelogram gradient-heading"
+  >
+    Giỏ hàng của bạn
+  </h1>
+  <div
+    class="p-8 space-y-6 border-2 border-green-200 rounded-md shadow-md bg-green-50 hover:border-dashed hover:border-primary"
+  >
+    <table class="w-full border-collapse table-auto">
+      <thead>
+        <tr class="bg-gray-500 text-gray-50">
+          <th class="px-4 py-2 text-start">Sản phẩm</th>
+          <th class="px-4 py-2 text-start">Số lượng</th>
+          <th class="px-4 py-2 text-start">Giá</th>
+          <th class="px-4 py-2 text-start">Thành tiền</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="border-b-2 border-gray-400 odd:bg-gray-50 even:bg-gray-100">
+          <td class="px-4 py-8">
+            The Sliding Mr. Bones (Next Stop, Pottersville)
+          </td>
+          <td class="px-4 py-8">Malcolm Lockyer</td>
+          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
+          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
+        </tr>
+        <tr class="border-b-2 border-gray-400 odd:bg-gray-50 even:bg-white">
+          <td class="px-4 py-8">
+            The Sliding Mr. Bones (Next Stop, Pottersville)
+          </td>
+          <td class="px-4 py-8">Malcolm Lockyer</td>
+          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
+          <td class="px-4 py-8">{{currencyFormat '200000'}}</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="pr-4 space-x-12 text-end">
+      <span class="text-xl font-medium font-heading">Tổng số thành tiền: </span>
+      <span class="text-2xl font-bold text-primary">
+        {{currencyFormat '200000'}}
+      </span>
+    </div>
+
+    <div class="flex justify-end gap-3">
+      <a
+        href="/books"
+        class="px-6 py-2 text-center text-white transition-colors bg-gray-400 rounded-md hover:bg-gray-500"
+      >
+        Tiếp tục mua hàng
+      </a>
+      <button
+        class="px-6 py-2 text-center text-white transition-colors rounded-md bg-primary hover:bg-green-500"
+      >
+        Tiến hành thanh toán
+      </button>
+    </div>
+  </div>
+
+  <!-- <div class="p-4 text-center border-2 rounded-md border-primary bg-green-50">
+    <p>Không có sản phẩm nào trong giỏ hàng của bạn.</p>
+    <p>
+      Hãy quay lại
+      <a
+        href="/books"
+        class="font-medium text-primary hover:underline underline-offset-2"
+        >danh sách sản phẩm</a
+      >
+      và thêm vào giỏ hàng của bạn
+    </p>
+  </div> -->
+</main>
