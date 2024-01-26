@@ -6,7 +6,7 @@
 		"tailwind:css": {
 			"patterns": [
 				"src/primary-server/public/css/tailwind.css",
-				"src/primary-server/views/**/*.html"
+				"src/primary-server/views/**/*"
 			],
 			"extensions": "css,html",
 			"quiet": false

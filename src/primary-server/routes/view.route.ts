@@ -151,10 +151,10 @@ router.get("/books", async (req, res) => {
 
 router.get("/books/:id", async (req, res) => {
   const { id } = req.params;
-  const book = await Book.findById(id).lean();
+  const book = await Book.findById(id).populate("category").lean();
 
   res.render("pages/books/show", {
-    title: `Fohoso - ${book.name}`,
+    title: book.name,
     book,
   });
 });
