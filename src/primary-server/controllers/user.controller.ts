@@ -27,8 +27,15 @@ export const createUser = async (
 		}
 
 		const newUser = await User.create(req.body);
-		// Remove password and from user object
 		newUser.password = undefined;
+
+		// Send request to create payment account
+		await req.request.toPaymentServer("/api/v1/payment-accounts", {
+			method: "POST",
+			data: {
+				user: newUser._id,
+			},
+		});
 
 		res.created(newUser);
 	} catch (err) {

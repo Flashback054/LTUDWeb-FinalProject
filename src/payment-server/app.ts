@@ -20,7 +20,11 @@ const app = express();
 app.enable("trust proxy");
 
 // CORS;
-const allowOrigins = ["http://localhost:5173", "http://localhost:4173"];
+const allowOrigins = [
+	"http://localhost:5173",
+	"http://localhost:4173",
+	"http://localhost:8080",
+];
 app.use(
 	cors({
 		credentials: true,

@@ -40,64 +40,68 @@ app.enable("trust proxy");
 
 // View engine
 const hbs = create({
-  extname: ".html",
-  layoutsDir: `${__dirname}/views/layouts`,
-  partialsDir: `${__dirname}/views/components/`,
-  helpers: {
-    currencyFormat(value: number | bigint) {
-      return Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-      }).format(value);
-    },
-    currentYear() {
-      return new Date().getFullYear();
-    },
-    ratingStar(rating: number) {
-      const wholeRating = Math.floor(rating);
-      let result = "";
+	extname: ".html",
+	layoutsDir: `${__dirname}/views/layouts`,
+	partialsDir: `${__dirname}/views/components/`,
+	helpers: {
+		currencyFormat(value: number | bigint) {
+			return Intl.NumberFormat("vi-VN", {
+				style: "currency",
+				currency: "VND",
+			}).format(value);
+		},
+		currentYear() {
+			return new Date().getFullYear();
+		},
+		ratingStar(rating: number) {
+			const wholeRating = Math.floor(rating);
+			let result = "";
 
-      for (let i = 0; i < wholeRating; i++) {
-        result += `<i class="fas fa-star"></i>`;
-      }
+			for (let i = 0; i < wholeRating; i++) {
+				result += `<i class="fas fa-star"></i>`;
+			}
 
-      if (rating > wholeRating) {
-        result += `<i class="fas fa-star-half-alt"></i>`;
-      }
+			if (rating > wholeRating) {
+				result += `<i class="fas fa-star-half-alt"></i>`;
+			}
 
-      for (let i = 0; i < 5 - Math.ceil(rating); i++) {
-        result += `<i class="far fa-star"></i>`;
-      }
+			for (let i = 0; i < 5 - Math.ceil(rating); i++) {
+				result += `<i class="far fa-star"></i>`;
+			}
 
-      return result;
-    },
-    removeQueryParamFromUrl(url: string, param: string) {
-      const result = url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
+			return result;
+		},
+		removeQueryParamFromUrl(url: string, param: string) {
+			const result = url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
 
-      if (result.includes("?")) {
-        return result.concat("&");
-      }
+			if (result.includes("?")) {
+				return result.concat("&");
+			}
 
-      return result.concat("?");
-    },
-    removeQueryParamsFromUrl(url: string, ...params: [string]) {
-      for (const param of params) {
-        url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
-      }
+			return result.concat("?");
+		},
+		removeQueryParamsFromUrl(url: string, ...params: [string]) {
+			for (const param of params) {
+				url.replace(new RegExp(`[&?]?${param}=[^&]*&?`), "");
+			}
 
-      if (url.includes("?")) {
-        return url.concat("&");
-      }
+			if (url.includes("?")) {
+				return url.concat("&");
+			}
 
-      return url.concat("?");
-    },
-  },
+			return url.concat("?");
+		},
+	},
 });
 app.engine("html", hbs.engine);
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "html");
 
-const allowOrigins = ["http://localhost:5173", "http://localhost:4173"];
+const allowOrigins = [
+	"http://localhost:5173",
+	"http://localhost:4173",
+	"http://localhost:6969",
+];
 app.use(
 	cors({
 		credentials: true,
@@ -107,27 +111,27 @@ app.use(
 app.options("*", cors());
 
 app.use(
-  helmet({
-    crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: {
-      policy: "cross-origin",
-    },
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["*"],
-        scriptSrc: [
-          "* data: 'unsafe-eval' 'unsafe-inline' blob: https://sandbox.vnpayment.vn",
-        ],
-        connectSrc: ["*", "https://sandbox.vnpayment.vn"],
-        frameSrc: ["*", "https://sandbox.vnpayment.vn"],
-        imgSrc: [
-          "http://localhost:8080/",
-          "https://res.cloudinary.com",
-          "data:",
-        ],
-      },
-    },
-  })
+	helmet({
+		crossOriginEmbedderPolicy: false,
+		crossOriginResourcePolicy: {
+			policy: "cross-origin",
+		},
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: ["*"],
+				scriptSrc: [
+					"* data: 'unsafe-eval' 'unsafe-inline' blob: https://sandbox.vnpayment.vn",
+				],
+				connectSrc: ["*", "https://sandbox.vnpayment.vn"],
+				frameSrc: ["*", "https://sandbox.vnpayment.vn"],
+				imgSrc: [
+					"http://localhost:8080/",
+					"https://res.cloudinary.com",
+					"data:",
+				],
+			},
+		},
+	})
 );
 
 app.use(mongoSanitize());
@@ -140,30 +144,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.static(`${__dirname}/public`));
 
 // Config response (add custom methods)
+import requestConfig from "../commons/configs/request.config";
 import responseConfig from "../commons/configs/response.config";
+requestConfig(app);
 responseConfig(app);
 
 app.use(methodOverride("_method"));
 app.use(flash());
-
-app.get("/login", (req, res) => {
-	res.send(`
-    <form action="http://localhost:8080/api/v1/auth/login" method="POST">
-      <input type="email" name="email" />
-      <input type="password" name="password" />
-      <input type="submit" value="Submit" />
-    </form>
-  `);
-});
-
-app.get("/charge", (req, res) => {
-	res.send(`
-    <form action="/api/v1/charge-histories" method="POST">
-      <input type="number" name="chargeAmount" />
-      <input type="submit" value="Submit" />
-    </form>
-  `);
-});
 
 // API routes
 app.use("/api/v1", BaseRouter);

@@ -64,6 +64,15 @@ export const login = async (
 
 	// 2) Check if user exists && password is correct
 	const user = await User.findOne({ email }, "+password +active");
+
+	if (user.authType === "google") {
+		throw new AppError(
+			401,
+			"BAD_REQUEST",
+			"Tài khoản này đã được đăng ký bằng Google. Vui lòng đăng nhập bằng Google."
+		);
+	}
+
 	if (!user || !(await user.isCorrectPassword(password)))
 		throw new AppError(
 			401,
