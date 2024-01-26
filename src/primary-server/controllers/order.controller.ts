@@ -73,13 +73,16 @@ export const createOrder = async (
 		}, 0);
 		const finalPrice = totalPrice;
 
-		order = await Order.create({
-			user: userId,
-			orderDetails,
-			totalPrice,
-			finalPrice,
-			status: "paid",
-		});
+		order = await Order.create(
+			{
+				user: userId,
+				orderDetails,
+				totalPrice,
+				finalPrice,
+				status: "paid",
+			},
+			{ session }
+		);
 
 		const payment = await req.request.toPaymentServer(`/api/v1/payments`, {
 			method: "POST",
@@ -391,8 +394,8 @@ export const checkGetAllOrdersPermission = async (
 
 	const userId = req.user.id;
 	if (
-		!req.params.userId ||
-		(req.params.userId && req.params.userId !== userId.toString())
+		!req.params.user ||
+		(req.params.user && req.params.user !== userId.toString())
 	) {
 		throw new AppError(
 			403,

@@ -13,10 +13,16 @@ const requestTemplate = (req: Request, res: Response, url: string) => {
 		try {
 			options = options || {};
 			path = path || req.originalUrl;
+			const headers = {
+				...req.headers,
+				"Content-Type": "application/json",
+			};
+
+			// Generate a random number and add it to the request header jwt (Authorization)
 
 			const response = await axios({
 				url: `${url}${path}`,
-				headers: req.headers,
+				headers: headers,
 				body: options.data || req.body,
 				method: options.method || req.method,
 				params: options.params || req.query,
