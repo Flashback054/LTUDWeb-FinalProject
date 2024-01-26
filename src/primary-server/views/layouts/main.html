@@ -52,6 +52,8 @@
   </body>
 
   <script>
+    const userCartKey = "userCart";
+
     document.addEventListener("DOMContentLoaded", function () {
       const mainNav = document.getElementById("main-nav");
       const mainNavLinks = mainNav?.querySelectorAll("a");
@@ -63,6 +65,9 @@
       const bookRatingFilter = document.getElementById("rating-filter");
       const categoryDetails = document.getElementById("category-details");
       const removeFilterButton = document.getElementById("remove-filter-btn");
+      const addToCartForm = document.getElementById("add-to-cart-form");
+
+      const userCart = JSON.parse(localStorage.getItem(userCartKey));
 
       const location = window.location;
 
@@ -243,6 +248,41 @@
           }
 
           window.location.href = currentUrl.href;
+        });
+      }
+
+      if (addToCartForm) {
+        const addToCartMessage = document.getElementById("add-to-cart-message");
+
+        addToCartForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const formData = new FormData(this);
+          const book = Object.fromEntries(formData.entries());
+          const bookId = book.id;
+
+          if (userCart) {
+            const bookIndex = userCart.findIndex((item) => {
+              return item.id == bookId;
+            });
+
+            if (bookIndex == -1) {
+              userCart.push(book);
+            } else {
+              userCart[bookIndex].quantity =
+                +userCart[bookIndex].quantity + +book.quantity;
+            }
+
+            localStorage.setItem(userCartKey, JSON.stringify(userCart));
+          } else {
+            localStorage.setItem(userCartKey, JSON.stringify([book]));
+          }
+
+          addToCartMessage.setAttribute("aria-hidden", "false");
+
+          setTimeout(() => {
+            addToCartMessage.setAttribute("aria-hidden", "true");
+          }, 3000);
         });
       }
     });

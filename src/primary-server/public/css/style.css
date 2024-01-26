@@ -1153,6 +1153,10 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(107 114 128 / var(--tw-bg-opacity));
 }
+.bg-green-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity));
+}
 .bg-green-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(240 253 244 / var(--tw-bg-opacity));
@@ -1386,6 +1390,10 @@ select {
 .text-gray-700 {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity));
+}
+.text-gray-900 {
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity));
 }
 .text-green-500 {
   --tw-text-opacity: 1;
@@ -1631,6 +1639,9 @@ select {
 }
 .peer:has(li) ~ .peer-has-\[li\]\:inline-block {
   display: inline-block;
+}
+.aria-hidden\:hidden[aria-hidden="true"] {
+  display: none;
 }
 .data-\[current\=true\]\:pointer-events-none[data-current=true] {
   pointer-events: none;
