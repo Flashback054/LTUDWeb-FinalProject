@@ -182,4 +182,11 @@ router.get("/cart", (req, res) => {
   });
 });
 
+router.get("*", (req, res) => {
+  res.render("pages/404", {
+    title: "Fohoso - 404",
+    layout: "error",
+  });
+});
+
 export default router;

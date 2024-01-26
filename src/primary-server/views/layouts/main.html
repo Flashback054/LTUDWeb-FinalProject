@@ -76,6 +76,7 @@
       const cartContentTable = document.getElementById("cart-content-table");
       const emptyCartMessage = document.getElementById("empty-cart-message");
       const cartNumber = document.getElementById("cart-number");
+      const backButton = document.getElementById("back-button");
 
       const userCart = JSON.parse(localStorage.getItem(userCartKey));
 
@@ -93,6 +94,12 @@
             cartNumber.parentElement.setAttribute("aria-hidden", "true");
           }
         }
+      }
+
+      if (backButton) {
+        backButton.addEventListener("click", () => {
+          window.history.back();
+        });
       }
 
       mainNavLinks?.forEach((link) => {
