@@ -7,9 +7,9 @@
     <img
       src="{{book.image}}"
       alt="Bìa sách của {{book.name}}"
-      class="sticky col-span-3 rounded-md top-20"
+      class="sticky col-span-4 rounded-md top-20"
     />
-    <section class="col-span-9 p-4 space-y-4 bg-gray-100 rounded-md">
+    <section class="col-span-8 p-4 space-y-4 bg-gray-100 rounded-md">
       <h2 class="text-xl font-bold">{{book.name}}</h2>
       <div class="flex items-center gap-4 text-sm">
         <p>
@@ -21,39 +21,84 @@
           <span>{{book.publishedYear}}</span>
         </p>
       </div>
-      <div class="text-sm">
-        <strong>Số lượng còn lại: </strong>
-        <span>{{book.quantity}}</span>
-      </div>
       <div class="text-yellow-500 textsm">
         {{{ratingStar book.ratingsAverage}}}
       </div>
       <a
         href="/books?category={{book.category._id}}"
-        class="inline-block px-3 py-1 text-sm text-white rounded-full bg-primary"
+        class="inline-block px-3 py-1 text-sm text-white rounded-full bg-sky-500"
       >
         {{book.category.name}}
       </a>
-      <div>
-        <div
-          class="px-8 py-1 text-2xl text-white bg-orange-400 parallelogram w-fit"
-        >
-          {{currencyFormat book.sellingPrice}}
-        </div>
-      </div>
 
       <details>
         <summary class="font-bold">Mô tả</summary>
         <p class="text-sm max-w-prose">{{book.description}}</p>
       </details>
+
+      <div
+        class="flex items-center gap-8 px-4 py-2 border-2 border-orange-500 border-dashed rounded-md w-fit"
+      >
+        <div class="space-y-3">
+          <div class="text-sm">
+            <strong>Số lượng còn lại: </strong>
+            <span>{{book.quantity}}</span>
+          </div>
+
+          <div>
+            <div
+              class="px-8 py-1 text-2xl text-white bg-orange-400 parallelogram w-fit"
+            >
+              {{currencyFormat book.sellingPrice}}
+            </div>
+          </div>
+        </div>
+        <form class="p-4 space-y-4 rounded-md">
+          <div class="flex items-center gap-2">
+            <label for="to-cart-quantity" class="text-sm font-bold"
+              >Số lượng:
+            </label>
+            <div class="flex items-center gap-2">
+              <button
+                type="button"
+                class="px-2 bg-white border border-gray-500 rounded-sm"
+              >
+                <i class="fas fa-minus fa-xs"></i>
+              </button>
+              <input
+                value="1"
+                min="1"
+                max="{{book.quantity}}"
+                step="1"
+                type="number"
+                name="to-cart-quantity"
+                id="to-cart-quantity"
+                class="p-0.5 rounded-sm max-w-20 text-center"
+              />
+              <button
+                type="button"
+                class="px-2 bg-white border border-gray-500 rounded-sm"
+              >
+                <i class="fas fa-plus fa-xs"></i>
+              </button>
+            </div>
+          </div>
+          <button
+            class="w-full px-3 py-2 text-center text-white transition-colors rounded-md bg-primary hover:bg-green-500"
+          >
+            <i class="mr-1 fas fa-shopping-cart"></i>
+            Thêm vào giỏ hàng
+          </button>
+        </form>
+      </div>
     </section>
 
-    <section class="col-span-9 col-start-4">
+    <section class="col-span-8 col-start-5">
       <h3 class="px-4 py-1 mb-4 text-lg uppercase w-fit gradient-heading">
         Có thể bạn sẽ thích
       </h3>
 
-      <ul class="flex gap-3 pb-4 overflow-auto">
+      <ul class="flex gap-3 px-2 pt-2 pb-4 overflow-auto">
         {{#each recommendedBooks}}
         <li class="min-w-40">
           {{#with this}}
