@@ -52,6 +52,15 @@
   </body>
 
   <script>
+    const userCartKey = "userCart";
+
+    function currencyFormat(value) {
+      return Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      }).format(value);
+    }
+
     document.addEventListener("DOMContentLoaded", function () {
       const mainNav = document.getElementById("main-nav");
       const mainNavLinks = mainNav?.querySelectorAll("a");
@@ -63,8 +72,35 @@
       const bookRatingFilter = document.getElementById("rating-filter");
       const categoryDetails = document.getElementById("category-details");
       const removeFilterButton = document.getElementById("remove-filter-btn");
+      const addToCartForm = document.getElementById("add-to-cart-form");
+      const cartContentTable = document.getElementById("cart-content-table");
+      const emptyCartMessage = document.getElementById("empty-cart-message");
+      const cartNumber = document.getElementById("cart-number");
+      const backButton = document.getElementById("back-button");
+
+      const userCart = JSON.parse(localStorage.getItem(userCartKey));
 
       const location = window.location;
+
+      function updateCartNumber() {
+        if (cartNumber) {
+          if (userCart?.length > 0) {
+            cartNumber.textContent = userCart.reduce((total, item) => {
+              console.log(item.quantity);
+              return total + +item.quantity;
+            }, 0);
+          } else {
+            cartNumber.textContent = "";
+            cartNumber.parentElement.setAttribute("aria-hidden", "true");
+          }
+        }
+      }
+
+      if (backButton) {
+        backButton.addEventListener("click", () => {
+          window.history.back();
+        });
+      }
 
       mainNavLinks?.forEach((link) => {
         if (link.getAttribute("href") === location.pathname) {
@@ -245,6 +281,113 @@
           window.location.href = currentUrl.href;
         });
       }
+
+      if (addToCartForm) {
+        const addToCartMessage = document.getElementById("add-to-cart-message");
+
+        addToCartForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const formData = new FormData(this);
+          const book = Object.fromEntries(formData.entries());
+          const bookId = book.id;
+
+          if (userCart) {
+            const bookIndex = userCart.findIndex((item) => {
+              return item.id == bookId;
+            });
+
+            if (bookIndex == -1) {
+              userCart.push(book);
+            } else {
+              userCart[bookIndex].quantity =
+                +userCart[bookIndex].quantity + +book.quantity;
+            }
+
+            localStorage.setItem(userCartKey, JSON.stringify(userCart));
+          } else {
+            localStorage.setItem(userCartKey, JSON.stringify([book]));
+          }
+
+          addToCartMessage.setAttribute("aria-hidden", "false");
+          updateCartNumber();
+
+          setTimeout(() => {
+            addToCartMessage.setAttribute("aria-hidden", "true");
+          }, 3000);
+        });
+      }
+
+      if (cartContentTable) {
+        const tableBody = cartContentTable.querySelector("tbody");
+        const cartTotal = document.getElementById("cart-total");
+
+        cartContentTable.parentElement.setAttribute("aria-hidden", "false");
+        emptyCartMessage.setAttribute("aria-hidden", "true");
+
+        if (userCart?.length > 0) {
+          let bodyData = "";
+          let total = 0;
+
+          userCart.forEach((item) => {
+            total += +item.price * +item.quantity;
+
+            const tableData = `
+            <tr class="border-b-2 border-gray-400 odd:bg-gray-50 even:bg-gray-100">
+              <td class="px-4 py-8">
+                <div class="flex items-center gap-3">
+                  <button data-name="remove-item" data-id="${
+                    item.id
+                  }"><i class="text-red-600 fa-lg fa-solid fa-trash"></i></button>
+                  <img
+                    src="${item.image}"
+                    alt="${item.name}"
+                    class="max-w-[80px]"
+                  />
+                  <a href="/books/${item.id}" class="hover:underline">
+                    ${item.name}
+                  </a>
+                </div>
+              </td>
+              <td class="px-4 py-8">${item.quantity}</td>
+              <td class="px-4 py-8">${currencyFormat(item.price)}</td>
+              <td class="px-4 py-8">${currencyFormat(
+                +item.price * +item.quantity
+              )}</td>
+            </tr>
+            `;
+
+            bodyData += tableData;
+          });
+
+          tableBody.innerHTML = bodyData;
+          cartTotal.textContent = currencyFormat(total);
+
+          const removeItemButtons = tableBody.querySelectorAll(
+            "button[data-name='remove-item']"
+          );
+
+          removeItemButtons.forEach((button) => {
+            button.addEventListener("click", function () {
+              const bookId = this.getAttribute("data-id");
+              const bookIndex = userCart.findIndex((item) => {
+                return item.id == bookId;
+              });
+
+              userCart.splice(bookIndex, 1);
+
+              localStorage.setItem(userCartKey, JSON.stringify(userCart));
+
+              window.location.reload();
+            });
+          });
+        } else {
+          cartContentTable.parentElement.setAttribute("aria-hidden", "true");
+          emptyCartMessage.setAttribute("aria-hidden", "false");
+        }
+      }
+
+      updateCartNumber();
     });
   </script>
 </html>
