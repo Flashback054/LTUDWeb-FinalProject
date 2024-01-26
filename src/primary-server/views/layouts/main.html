@@ -75,10 +75,25 @@
       const addToCartForm = document.getElementById("add-to-cart-form");
       const cartContentTable = document.getElementById("cart-content-table");
       const emptyCartMessage = document.getElementById("empty-cart-message");
+      const cartNumber = document.getElementById("cart-number");
 
       const userCart = JSON.parse(localStorage.getItem(userCartKey));
 
       const location = window.location;
+
+      function updateCartNumber() {
+        if (cartNumber) {
+          if (userCart?.length > 0) {
+            cartNumber.textContent = userCart.reduce((total, item) => {
+              console.log(item.quantity);
+              return total + +item.quantity;
+            }, 0);
+          } else {
+            cartNumber.textContent = "";
+            cartNumber.parentElement.setAttribute("aria-hidden", "true");
+          }
+        }
+      }
 
       mainNavLinks?.forEach((link) => {
         if (link.getAttribute("href") === location.pathname) {
@@ -288,6 +303,7 @@
           }
 
           addToCartMessage.setAttribute("aria-hidden", "false");
+          updateCartNumber();
 
           setTimeout(() => {
             addToCartMessage.setAttribute("aria-hidden", "true");
@@ -363,6 +379,8 @@
           emptyCartMessage.setAttribute("aria-hidden", "false");
         }
       }
+
+      updateCartNumber();
     });
   </script>
 </html>

@@ -57,30 +57,16 @@
         <form class="p-4 space-y-4 rounded-md" id="add-to-cart-form">
           <div class="flex items-center gap-2">
             <label for="quantity" class="text-sm font-bold"> Số lượng: </label>
-            <div class="flex items-center gap-2">
-              <button
-                type="button"
-                class="px-2 bg-white border border-gray-500 rounded-sm"
-              >
-                <i class="fas fa-minus fa-xs"></i>
-              </button>
-              <input
-                value="1"
-                min="1"
-                max="{{book.quantity}}"
-                step="1"
-                type="number"
-                name="quantity"
-                id="quantity"
-                class="p-0.5 rounded-sm max-w-20 text-center"
-              />
-              <button
-                type="button"
-                class="px-2 bg-white border border-gray-500 rounded-sm"
-              >
-                <i class="fas fa-plus fa-xs"></i>
-              </button>
-            </div>
+            <input
+              value="1"
+              min="1"
+              max="{{book.quantity}}"
+              step="1"
+              type="number"
+              name="quantity"
+              id="quantity"
+              class="p-0.5 rounded-sm max-w-20 text-center"
+            />
           </div>
           <input type="hidden" name="id" value="{{book._id}}" />
           <input type="hidden" name="name" value="{{book.name}}" />
