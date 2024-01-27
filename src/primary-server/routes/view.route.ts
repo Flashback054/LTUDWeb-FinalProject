@@ -251,18 +251,26 @@ router.get("/books/:id", async (req, res) => {
 router.get("/cart", async (req, res) => {
   const userId = req.user?.id;
 
-  const [chargeHistories, orderHistories] = await Promise.all([
-    req.request.toPaymentServer(`/api/v1/charge-histories?user=${userId}`),
-    req.request.toPaymentServer(`/api/v1/payments?user=${userId}`),
-  ]);
+  if (userId) {
+    const [chargeHistories, orderHistories] = await Promise.all([
+      req.request.toPaymentServer(`/api/v1/charge-histories?user=${userId}`),
+      req.request.toPaymentServer(`/api/v1/payments?user=${userId}`),
+    ]);
 
-  console.log(orderHistories.at(0).order);
+    return res.render("pages/cart", {
+      title: "Fohoso - Giỏ hàng",
+      chargeHistories,
+      orderHistories,
+    });
+  }
 
   res.render("pages/cart", {
     title: "Fohoso - Giỏ hàng",
-    chargeHistories,
-    orderHistories,
   });
+});
+
+router.get("/login/google", (req, res) => {
+  res.redirect("/api/v1/auth/google");
 });
 
 router.get("/login", redirectIfLoggedIn, (req, res) => {
