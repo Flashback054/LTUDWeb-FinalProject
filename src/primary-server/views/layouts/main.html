@@ -86,7 +86,6 @@
         if (cartNumber) {
           if (userCart?.length > 0) {
             const userCart = JSON.parse(localStorage.getItem(userCartKey));
-            console.log("hit here");
             cartNumber.textContent = userCart.reduce((total, item) => {
               return total + +item.quantity;
             }, 0);
@@ -286,9 +285,15 @@
 
       if (addToCartForm) {
         const addToCartMessage = document.getElementById("add-to-cart-message");
+        const formButtons = addToCartForm.querySelectorAll("button");
 
         addToCartForm.addEventListener("submit", function (event) {
           event.preventDefault();
+
+          addToCartMessage.setAttribute("aria-hidden", "false");
+          formButtons.forEach((button) => {
+            button.disabled = true;
+          });
 
           const formData = new FormData(this);
           const book = Object.fromEntries(formData.entries());
@@ -312,9 +317,12 @@
           }
 
           updateCartNumber();
-          addToCartMessage.setAttribute("aria-hidden", "false");
 
           setTimeout(() => {
+            formButtons.forEach((button) => {
+              button.disabled = false;
+            });
+
             addToCartMessage.setAttribute("aria-hidden", "true");
           }, 3000);
         });
