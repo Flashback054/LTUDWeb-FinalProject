@@ -78,6 +78,7 @@
       const cartNumber = document.getElementById("cart-number");
       const backButton = document.getElementById("back-button");
       const chargeForm = document.getElementById("charge-form");
+      const checkoutForm = document.getElementById("checkout-form");
 
       const userCart = JSON.parse(localStorage.getItem(userCartKey));
 
@@ -86,7 +87,8 @@
       function updateCartNumber() {
         if (cartNumber) {
           if (userCart?.length > 0) {
-            const userCart = JSON.parse(localStorage.getItem(userCartKey));
+            const userCart =
+              JSON.parse(localStorage.getItem(userCartKey)) ?? [];
             cartNumber.textContent = userCart.reduce((total, item) => {
               return total + +item.quantity;
             }, 0);
@@ -416,6 +418,76 @@
           chargeForm[0].value = chargeAmountNumber;
           chargeForm.submit();
         });
+
+        if (checkoutForm) {
+          const messageBox = document.getElementById("checkout-message-box");
+          const successMessage = messageBox.querySelector(
+            "p[data-name='success']"
+          );
+          const errorMessage = messageBox.querySelector("p[data-name='error']");
+          const submitButton = checkoutForm.querySelector(
+            "button[type='submit']"
+          );
+
+          checkoutForm.addEventListener("submit", async function (event) {
+            event.preventDefault();
+
+            const confirm = window.confirm(
+              "Bạn có chắc chắn muốn đặt hàng không?"
+            );
+
+            if (!confirm) {
+              return;
+            }
+
+            const userCart = JSON.parse(localStorage.getItem(userCartKey));
+
+            const orderDetails = userCart.map((item) => {
+              return {
+                book: item.id,
+                quantity: +item.quantity,
+                price: +item.price,
+              };
+            });
+
+            try {
+              submitButton.disabled = true;
+              const response = await fetch("/orders", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  orderDetails,
+                }),
+              });
+
+              if (response.ok) {
+                cartContentTable.parentElement.setAttribute(
+                  "aria-hidden",
+                  "true"
+                );
+                emptyCartMessage.setAttribute("aria-hidden", "false");
+
+                localStorage.removeItem(userCartKey);
+                updateCartNumber();
+
+                successMessage.setAttribute("aria-hidden", "false");
+                cartNumber.parentElement.setAttribute("aria-hidden", "false");
+              }
+            } catch (error) {
+              errorMessage.setAttribute("aria-hidden", "false");
+            } finally {
+              submitButton.disabled = false;
+
+              setTimeout(() => {
+                successMessage.setAttribute("aria-hidden", "true");
+                errorMessage.setAttribute("aria-hidden", "true");
+                window.location.href = "/cart";
+              }, 3000);
+            }
+          });
+        }
       }
 
       updateCartNumber();
