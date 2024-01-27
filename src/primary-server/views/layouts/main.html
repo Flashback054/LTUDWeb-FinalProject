@@ -85,10 +85,12 @@
       function updateCartNumber() {
         if (cartNumber) {
           if (userCart?.length > 0) {
+            const userCart = JSON.parse(localStorage.getItem(userCartKey));
+            console.log("hit here");
             cartNumber.textContent = userCart.reduce((total, item) => {
-              console.log(item.quantity);
               return total + +item.quantity;
             }, 0);
+            cartNumber.parentElement.setAttribute("aria-hidden", "false");
           } else {
             cartNumber.textContent = "";
             cartNumber.parentElement.setAttribute("aria-hidden", "true");
@@ -309,8 +311,8 @@
             localStorage.setItem(userCartKey, JSON.stringify([book]));
           }
 
-          addToCartMessage.setAttribute("aria-hidden", "false");
           updateCartNumber();
+          addToCartMessage.setAttribute("aria-hidden", "false");
 
           setTimeout(() => {
             addToCartMessage.setAttribute("aria-hidden", "true");
