@@ -40,6 +40,9 @@ export const createOrder = async (
 	const { user, orderDetails } = req.body;
 
 	const userId = user || req.user?.id;
+
+	console.log("User:", req.user);
+	console.log("User ID:", userId);
 	let order;
 	// For each orderDetails, check if orderDetails.quantity <= Book.quantity
 	// Use mongoose Session to rollback if any orderDetails.quantity > Book.quantity
@@ -73,16 +76,19 @@ export const createOrder = async (
 		}, 0);
 		const finalPrice = totalPrice;
 
-		order = await Order.create(
-			{
-				user: userId,
-				orderDetails,
-				totalPrice,
-				finalPrice,
-				status: "paid",
-			},
+		const orders = await Order.create(
+			[
+				{
+					user: userId,
+					orderDetails,
+					totalPrice,
+					finalPrice,
+					status: "paid",
+				},
+			],
 			{ session }
 		);
+		order = orders[0];
 
 		const payment = await req.request.toPaymentServer(`/api/v1/payments`, {
 			method: "POST",
