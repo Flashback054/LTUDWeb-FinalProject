@@ -182,6 +182,18 @@ router.get("/cart", (req, res) => {
   });
 });
 
+router.get("/login", (req, res) => {
+  res.render("pages/login", {
+    title: "Fohoso - Đăng nhập",
+  });
+});
+
+router.get("/register", (req, res) => {
+  res.render("pages/register", {
+    title: "Fohoso - Đăng ký",
+  });
+});
+
 router.get("*", (req, res) => {
   res.render("pages/404", {
     title: "Fohoso - 404",
