@@ -14,7 +14,7 @@ import { optionalValidateJWT } from "../../commons/middlewares/serverAuthJwt";
 
 const router = Router();
 
-router.use(optionalValidateJWT);
+// router.use(optionalValidateJWT);
 
 router.use("/users", UserRouter);
 router.use("/books", BookRouter);

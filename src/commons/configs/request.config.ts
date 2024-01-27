@@ -25,24 +25,24 @@ const validateJWT = (response: any) => {
 	});
 };
 
-// Sign request with jwt token
-axios.interceptors.request.use(
-	(config) => {
-		config.headers["Authorization"] = jwt.sign(
-			{
-				name: serverAuthPayload,
-			},
-			serverAuthSecret,
-			{
-				expiresIn: "1m",
-			}
-		);
-		return config;
-	},
-	(error) => {
-		return Promise.reject(error);
-	}
-);
+// // Sign request with jwt token
+// axios.interceptors.request.use(
+// 	(config) => {
+// 		config.headers["Authorization"] = jwt.sign(
+// 			{
+// 				name: serverAuthPayload,
+// 			},
+// 			serverAuthSecret,
+// 			{
+// 				expiresIn: "1m",
+// 			}
+// 		);
+// 		return config;
+// 	},
+// 	(error) => {
+// 		return Promise.reject(error);
+// 	}
+// );
 
 const requestTemplate = (req: Request, res: Response, url: string) => {
 	return async (path?: string, options?: any) => {
@@ -61,7 +61,7 @@ const requestTemplate = (req: Request, res: Response, url: string) => {
 				...options,
 			});
 
-			validateJWT(response);
+			// validateJWT(response);
 
 			return response.data.data || response.data;
 		} catch (err) {
