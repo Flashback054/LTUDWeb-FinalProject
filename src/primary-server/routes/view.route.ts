@@ -1,6 +1,8 @@
 import { Router } from "express";
+import { createAccessToken } from "../../commons/utils/generateToken";
 import Book from "../models/book.model";
 import Category from "../models/category.model";
+import User from "../models/user.model";
 
 const router = Router();
 
@@ -186,6 +188,39 @@ router.get("/login", (req, res) => {
   res.render("pages/login", {
     title: "Fohoso - Đăng nhập",
   });
+});
+
+router.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await User.findOne({ email }, "+password +active");
+
+  if (user.authType === "google") {
+    return res.render("pages/login", {
+      title: "Fohoso - Đăng nhập",
+      old: {
+        email,
+      },
+      errorMessage:
+        "Tài khoản này đã được đăng ký bằng Google. Vui lòng đăng nhập bằng Google.",
+    });
+  }
+
+  if (!user || !(await user.isCorrectPassword(password))) {
+    return res.render("pages/login", {
+      title: "Fohoso - Đăng nhập",
+      old: {
+        email,
+      },
+      errorMessage: "Email hoặc mật khẩu không đúng.",
+    });
+  }
+
+  const { accessToken, accessTokenOptions } = createAccessToken(user, req);
+
+  res.cookie("accessToken", accessToken, accessTokenOptions);
+
+  res.redirect("/");
 });
 
 router.get("/register", (req, res) => {
