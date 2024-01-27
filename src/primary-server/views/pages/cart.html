@@ -1,64 +1,140 @@
-<main class="max-w-4xl px-4 py-16 mx-auto">
-  <h1
-    class="px-4 py-1 mb-8 text-2xl uppercase w-fit parallelogram gradient-heading"
-  >
-    Giỏ hàng của bạn
-  </h1>
-  <div
-    class="p-8 space-y-6 border-2 border-green-200 rounded-md shadow-md bg-green-50 hover:border-dashed hover:border-primary aria-hidden:hidden"
-  >
-    <table class="w-full border-collapse table-auto" id="cart-content-table">
-      <colgroup>
-        <col class="w-[50%]" />
-        <col class="w-[13%]" />
-        <col class="w-[17%]" />
-        <col class="w-[20%]" />
-      </colgroup>
-      <thead>
-        <tr class="bg-gray-500 text-gray-50">
-          <th class="px-4 py-2 text-start">Sản phẩm</th>
-          <th class="px-4 py-2 text-start">Số lượng</th>
-          <th class="px-4 py-2 text-start">Giá</th>
-          <th class="px-4 py-2 text-start">Thành tiền</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+<main class="max-w-4xl px-4 py-16 mx-auto space-y-12">
+  <section>
+    <h1
+      class="px-4 py-1 mb-8 text-2xl uppercase w-fit parallelogram gradient-heading"
+    >
+      Giỏ hàng của bạn
+    </h1>
+    <div
+      class="p-8 space-y-6 border-2 border-green-200 rounded-md shadow-md bg-green-50 hover:border-dashed hover:border-primary aria-hidden:hidden"
+    >
+      <table class="w-full border-collapse table-auto" id="cart-content-table">
+        <colgroup>
+          <col class="w-[50%]" />
+          <col class="w-[13%]" />
+          <col class="w-[17%]" />
+          <col class="w-[20%]" />
+        </colgroup>
+        <thead>
+          <tr class="bg-gray-500 text-gray-50">
+            <th class="px-4 py-2 text-start">Sản phẩm</th>
+            <th class="px-4 py-2 text-start">Số lượng</th>
+            <th class="px-4 py-2 text-start">Giá</th>
+            <th class="px-4 py-2 text-start">Thành tiền</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
 
-    <div class="pr-4 space-x-12 text-end">
-      <span class="text-xl font-medium font-heading">Tổng số thành tiền: </span>
-      <span class="text-2xl font-bold text-primary" id="cart-total"> </span>
+      <div class="pr-4 space-x-12 text-end">
+        <span class="text-xl font-medium font-heading"
+          >Tổng số thành tiền:
+        </span>
+        <span class="text-2xl font-bold text-primary" id="cart-total"> </span>
+      </div>
+
+      <div class="flex justify-end gap-3">
+        <a
+          href="/books"
+          class="px-6 py-2 text-center text-white transition-colors bg-gray-400 rounded-md hover:bg-gray-500"
+        >
+          Tiếp tục mua hàng
+        </a>
+        <button
+          class="px-6 py-2 text-center text-white transition-colors rounded-md bg-primary hover:bg-green-500"
+        >
+          Tiến hành thanh toán
+        </button>
+      </div>
     </div>
 
-    <div class="flex justify-end gap-3">
-      <a
-        href="/books"
-        class="px-6 py-2 text-center text-white transition-colors bg-gray-400 rounded-md hover:bg-gray-500"
-      >
-        Tiếp tục mua hàng
-      </a>
-      <button
-        class="px-6 py-2 text-center text-white transition-colors rounded-md bg-primary hover:bg-green-500"
-      >
-        Tiến hành thanh toán
-      </button>
+    <div
+      id="empty-cart-message"
+      aria-hidden="true"
+      class="p-4 text-center border-2 border-green-200 rounded-md bg-green-50 aria-hidden:hidden hover:border-dashed hover:border-primary"
+    >
+      <p>Không có sản phẩm nào trong giỏ hàng của bạn.</p>
+      <p>
+        Hãy quay lại
+        <a
+          href="/books"
+          class="font-medium text-primary hover:underline underline-offset-2"
+          >danh sách sản phẩm</a
+        >
+        và thêm vào giỏ hàng của bạn
+      </p>
     </div>
-  </div>
+  </section>
 
-  <div
-    id="empty-cart-message"
-    aria-hidden="true"
-    class="p-4 text-center border-2 rounded-md border-primary bg-green-50 aria-hidden:hidden"
-  >
-    <p>Không có sản phẩm nào trong giỏ hàng của bạn.</p>
-    <p>
-      Hãy quay lại
-      <a
-        href="/books"
-        class="font-medium text-primary hover:underline underline-offset-2"
-        >danh sách sản phẩm</a
+  {{#if user}}
+  <section>
+    <h2
+      class="px-4 py-1 mb-8 text-xl text-white uppercase bg-gradient-to-r from-orange-500 to-orange-600 w-fit parallelogram"
+    >
+      Tài khoản của bạn
+    </h2>
+
+    <div class="flex items-start gap-8">
+      <div
+        class="p-4 space-y-2 border-2 border-orange-200 rounded-md bg-orange-50 hover:border-dashed hover:border-orange-600"
       >
-      và thêm vào giỏ hàng của bạn
-    </p>
-  </div>
+        <div>
+          <strong class="min-w-[16ch] text-sm inline-block"
+            >Tên tài khoản:</strong
+          >
+          <span>{{user.name}}</span>
+        </div>
+        <div>
+          <strong class="min-w-[16ch] text-sm inline-block">Email:</strong>
+          <span>{{user.email}}</span>
+        </div>
+        <div>
+          <strong class="min-w-[16ch] text-sm inline-block">Số dư:</strong>
+          <span>{{currencyFormat paymentAccount.balance}}</span>
+        </div>
+
+        <div
+          class="pt-4 text-sm text-center text-white border-t-2 border-orange-300 border-dashed"
+        >
+          <button
+            class="inline-flex items-center gap-1 px-3 py-2 bg-orange-500 rounded-md hover:bg-orange-600"
+          >
+            <i class="fa-regular fa-credit-card"></i>
+            <span>Nạp tiền</span>
+          </button>
+        </div>
+      </div>
+
+      <ul
+        class="flex-1 p-4 space-y-2 border-2 border-orange-200 rounded-md bg-orange-50 hover:border-dashed hover:border-orange-600"
+      >
+        <h2 class="mb-4 font-bold">Lịch sử giao dịch</h2>
+        <li>
+          <details>
+            <summary>giao dich x</summary>
+            giao dich x
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary>giao dich x</summary>
+            giao dich x
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary>giao dich x</summary>
+            giao dich x
+          </details>
+        </li>
+        <li>
+          <details>
+            <summary>giao dich x</summary>
+            giao dich x
+          </details>
+        </li>
+      </ul>
+    </div>
+  </section>
+  {{/if}}
 </main>

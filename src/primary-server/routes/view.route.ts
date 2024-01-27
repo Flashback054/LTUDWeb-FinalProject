@@ -57,14 +57,22 @@ async function injectUser(req, res, next) {
       const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET) as {
         id: string;
       };
-      const user = await User.findById({
-        _id: decoded.id,
-      });
+      const user = await User.findById(decoded.id).lean();
+      const [paymentAccount] = await req.request.toPaymentServer(
+        `/api/v1/payment-accounts?user=${decoded.id}`,
+        {
+          method: "GET",
+        }
+      );
       res.locals.user = user;
       req.user = user;
+      req.paymentAccount = paymentAccount;
+      res.locals.paymentAccount = paymentAccount;
     } catch (error) {
       res.locals.user = null;
       req.user = null;
+
+      console.log(error);
     }
   }
 
@@ -353,6 +361,11 @@ router.post("/register", async (req, res) => {
     successMessage: "Đăng ký thành công. Vui lòng đăng nhập.",
     old: { email },
   });
+});
+
+router.post("/logout", (req, res) => {
+  res.clearCookie("accessToken");
+  res.redirect("/");
 });
 
 router.get("*", (req, res) => {
