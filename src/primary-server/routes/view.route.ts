@@ -40,7 +40,7 @@ async function injectUser(req, res, next) {
       const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET) as {
         id: string;
       };
-      const user = await User.findById(decoded.id).lean();
+      const user = await User.findById(decoded.id).lean({ virtuals: true });
       const [paymentAccount] = await req.request.toPaymentServer(
         `/api/v1/payment-accounts?user=${decoded.id}`,
         {
@@ -249,18 +249,19 @@ router.get("/books/:id", async (req, res) => {
 });
 
 router.get("/cart", async (req, res) => {
-  const chargeHistories = await req.request.toPaymentServer(
-    "/api/v1/charge-histories",
-    {
-      method: "GET",
-    }
-  );
+  const userId = req.user?.id;
 
-  // console.log(chargeHistories);
+  const [chargeHistories, orderHistories] = await Promise.all([
+    req.request.toPaymentServer(`/api/v1/charge-histories?user=${userId}`),
+    req.request.toPaymentServer(`/api/v1/payments?user=${userId}`),
+  ]);
+
+  console.log(orderHistories.at(0).order);
 
   res.render("pages/cart", {
     title: "Fohoso - Giỏ hàng",
     chargeHistories,
+    orderHistories,
   });
 });
 

@@ -108,11 +108,31 @@
       <section
         class="flex-1 p-4 space-y-2 border-2 border-orange-200 rounded-md bg-orange-50 hover:border-dashed hover:border-orange-600"
       >
-        <details>
+        <details open>
           <summary class="mb-2 font-bold">Lịch sử mua hàng</summary>
           <ul class="pl-2 mb-4 text-sm">
-            <li>giao dich x</li>
-            <li>giao dich x</li>
+            {{#each orderHistories}}
+            <li class="p-2 rounded-md bg-gray-50">
+              <article class="space-y-2">
+                <div class="font-bold">
+                  <span>{{fullDateToShortDate this.paymentDate}}</span>
+                  <span>&centerdot;</span>
+                  <span>{{currencyFormat this.totalPrice}}</span>
+                </div>
+                <ul class="pl-3 list-disc">
+                  {{#each this.order.orderDetails}}
+                  <li>
+                    <span>{{this.book.name}}</span>
+                    <span>&centerdot;</span>
+                    <span>{{this.quantity}}</span>
+                    <span aria-label="nhân">x</span>
+                    <span>({{currencyFormat this.price}})</span>
+                  </li>
+                  {{/each}}
+                </ul>
+              </article>
+            </li>
+            {{/each}}
           </ul>
         </details>
 
