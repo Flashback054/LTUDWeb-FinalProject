@@ -32,7 +32,58 @@ paymentServerInstance.interceptors.request.use(
   }
 );
 
+function protect(req, res, next) {
+  const { accessToken } = req.cookies;
+
+  if (!accessToken) {
+    return res.redirect("/login");
+  }
+
+  try {
+    const user = jwt.verify(accessToken, process.env.JWT_SECRET);
+    req.user = user;
+    console.log(user);
+    next();
+  } catch (error) {
+    res.redirect("/login");
+  }
+}
+
+async function injectUser(req, res, next) {
+  const { accessToken } = req.cookies;
+
+  if (accessToken) {
+    try {
+      const decoded = jwt.verify(accessToken, process.env.ACCESS_SECRET) as {
+        id: string;
+      };
+      const user = await User.findById({
+        _id: decoded.id,
+      });
+      res.locals.user = user;
+      req.user = user;
+    } catch (error) {
+      res.locals.user = null;
+      req.user = null;
+    }
+  }
+
+  next();
+}
+
+function redirectIfLoggedIn(req, res, next) {
+  const { accessToken } = req.cookies;
+
+  if (accessToken) {
+    return res.redirect("/");
+  }
+
+  next();
+}
+
 const router = Router();
+
+router.use(injectUser);
 
 router.get("/", async (req, res) => {
   const [top5HighRatedBooks, top5RecentlyAddedBooks, bookCategories] =
@@ -212,7 +263,7 @@ router.get("/cart", (req, res) => {
   });
 });
 
-router.get("/login", (req, res) => {
+router.get("/login", redirectIfLoggedIn, (req, res) => {
   res.render("pages/login", {
     title: "Fohoso - Đăng nhập",
   });
@@ -249,7 +300,7 @@ router.post("/login", async (req, res) => {
   res.redirect("/");
 });
 
-router.get("/register", (req, res) => {
+router.get("/register", redirectIfLoggedIn, (req, res) => {
   res.render("pages/register", {
     title: "Fohoso - Đăng ký",
   });
