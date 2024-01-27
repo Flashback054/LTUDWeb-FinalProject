@@ -11,6 +11,7 @@ router.param("id", validateRequestId("id"));
 router.use(authController.protect);
 
 router.get("/", paymentController.getAllPayments);
+router.get("/my-payments", paymentController.getAllPaymentsByUserId);
 router.get("/:id", paymentController.getPayment);
 
 router.use(authController.restrictTo("admin"));
@@ -21,5 +22,6 @@ router
 	.route("/:id")
 	.patch(paymentController.updatePayment)
 	.delete(paymentController.deletePayment);
+
 
 export default router;
