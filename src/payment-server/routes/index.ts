@@ -1,12 +1,12 @@
 import PaymentRouter from "./payment.route";
 import PaymentAccountRouter from "./paymentAccount.route";
 import ChargeHistoryRouter from "./chargeHistory.route";
-import { checkAndValidateJwt } from "../../commons/middlewares/serverAuthJwt";
+import { requireValidateJWT } from "../../commons/middlewares/serverAuthJwt";
 import { Router } from "express";
 
 const router = Router();
 
-router.use(checkAndValidateJwt);
+router.use(requireValidateJWT);
 
 router.use("/payments", PaymentRouter);
 router.use("/payment-accounts", PaymentAccountRouter);

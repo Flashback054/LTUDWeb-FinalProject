@@ -10,8 +10,11 @@ import UserRouter from "./user.route";
 import ChargeHistoryRouter from "./chargeHistory.route";
 import PaymentAcountRouter from "./paymentAccount.route";
 import PaymentRouter from "./payment.route";
+import { optionalValidateJWT } from "../../commons/middlewares/serverAuthJwt";
 
 const router = Router();
+
+router.use(optionalValidateJWT);
 
 router.use("/users", UserRouter);
 router.use("/books", BookRouter);
