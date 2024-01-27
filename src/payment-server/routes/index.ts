@@ -6,7 +6,7 @@ import { Router } from "express";
 
 const router = Router();
 
-router.use(requireValidateJWT);
+// router.use(requireValidateJWT);
 
 router.use("/payments", PaymentRouter);
 router.use("/payment-accounts", PaymentAccountRouter);
