@@ -63,3 +63,22 @@ export const deletePayment = async (
 
 	res.noContent();
 };
+
+export const getAllPaymentsByUserId = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+) => {
+	const userId = req.user?.id;
+
+	if (!userId) {
+		res.badRequest("Không tìm thấy ID người dùng" );
+	}
+	else{
+		const url = `${req.baseUrl}?user=${userId}`;
+		const payments = await req.request.toPaymentServer(url, { method: "GET" });
+	
+		res.ok(payments);
+	}
+};
+
