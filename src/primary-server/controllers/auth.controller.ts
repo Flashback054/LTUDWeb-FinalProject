@@ -321,7 +321,9 @@ export const googleLogin = async (
 	const profile = user._json;
 
 	// 2) Check if googleId exists in database
-	let existingUser = await User.findOne({ googleId: profile.sub });
+	let existingUser = await User.findOne({
+		$or: [{ googleId: profile.sub }, { email: profile.email }],
+	});
 
 	// 3) If user not exists, create new user
 	if (!existingUser) {
