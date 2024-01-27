@@ -32,23 +32,6 @@ paymentServerInstance.interceptors.request.use(
   }
 );
 
-function protect(req, res, next) {
-  const { accessToken } = req.cookies;
-
-  if (!accessToken) {
-    return res.redirect("/login");
-  }
-
-  try {
-    const user = jwt.verify(accessToken, process.env.JWT_SECRET);
-    req.user = user;
-    console.log(user);
-    next();
-  } catch (error) {
-    res.redirect("/login");
-  }
-}
-
 async function injectUser(req, res, next) {
   const { accessToken } = req.cookies;
 
@@ -265,9 +248,19 @@ router.get("/books/:id", async (req, res) => {
   });
 });
 
-router.get("/cart", (req, res) => {
+router.get("/cart", async (req, res) => {
+  const chargeHistories = await req.request.toPaymentServer(
+    "/api/v1/charge-histories",
+    {
+      method: "GET",
+    }
+  );
+
+  // console.log(chargeHistories);
+
   res.render("pages/cart", {
     title: "Fohoso - Giỏ hàng",
+    chargeHistories,
   });
 });
 

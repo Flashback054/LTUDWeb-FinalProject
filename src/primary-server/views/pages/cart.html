@@ -105,35 +105,31 @@
         </div>
       </div>
 
-      <ul
+      <section
         class="flex-1 p-4 space-y-2 border-2 border-orange-200 rounded-md bg-orange-50 hover:border-dashed hover:border-orange-600"
       >
-        <h2 class="mb-4 font-bold">Lịch sử giao dịch</h2>
-        <li>
-          <details>
-            <summary>giao dich x</summary>
-            giao dich x
-          </details>
-        </li>
-        <li>
-          <details>
-            <summary>giao dich x</summary>
-            giao dich x
-          </details>
-        </li>
-        <li>
-          <details>
-            <summary>giao dich x</summary>
-            giao dich x
-          </details>
-        </li>
-        <li>
-          <details>
-            <summary>giao dich x</summary>
-            giao dich x
-          </details>
-        </li>
-      </ul>
+        <details>
+          <summary class="mb-2 font-bold">Lịch sử mua hàng</summary>
+          <ul class="pl-2 mb-4 text-sm">
+            <li>giao dich x</li>
+            <li>giao dich x</li>
+          </ul>
+        </details>
+
+        <details>
+          <summary class="mb-2 font-bold">Lịch sử nạp tiền</summary>
+          <ul class="pl-2 space-y-1">
+            {{#each chargeHistories}}
+            <li class="flex items-center gap-2 text-sm">
+              <i class="fa-solid fa-money-bill-trend-up fa-sm"></i>
+              <time>{{fullDateToShortDate this.chargeDate}}</time>
+              <span role="presentation">&centerdot;</span>
+              <span>{{currencyFormat this.chargeAmount}}</span>
+            </li>
+            {{/each}}
+          </ul>
+        </details>
+      </section>
     </div>
   </section>
   {{/if}}
