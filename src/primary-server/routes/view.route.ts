@@ -3,6 +3,34 @@ import { createAccessToken } from "../../commons/utils/generateToken";
 import Book from "../models/book.model";
 import Category from "../models/category.model";
 import User from "../models/user.model";
+import axios from "axios";
+
+import jwt from "jsonwebtoken";
+
+const serverAuthSecret = process.env.SERVER_AUTH_SECRET;
+const serverAuthPayload = process.env.SERVER_AUTH_PAYLOAD;
+
+const paymentServerInstance = axios.create({
+  baseURL: process.env.PAYMENT_SERVER_URL,
+});
+
+paymentServerInstance.interceptors.request.use(
+  (config) => {
+    config.headers.Authorization = jwt.sign(
+      {
+        name: serverAuthPayload,
+      },
+      serverAuthSecret,
+      {
+        expiresIn: "1m",
+      }
+    );
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 const router = Router();
 
@@ -192,15 +220,16 @@ router.get("/login", (req, res) => {
 
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
+  const locals = {
+    title: "Fohoso - Đăng nhập",
+    old: { email },
+  };
 
   const user = await User.findOne({ email }, "+password +active");
 
   if (user.authType === "google") {
     return res.render("pages/login", {
-      title: "Fohoso - Đăng nhập",
-      old: {
-        email,
-      },
+      ...locals,
       errorMessage:
         "Tài khoản này đã được đăng ký bằng Google. Vui lòng đăng nhập bằng Google.",
     });
@@ -208,10 +237,7 @@ router.post("/login", async (req, res) => {
 
   if (!user || !(await user.isCorrectPassword(password))) {
     return res.render("pages/login", {
-      title: "Fohoso - Đăng nhập",
-      old: {
-        email,
-      },
+      ...locals,
       errorMessage: "Email hoặc mật khẩu không đúng.",
     });
   }
@@ -226,6 +252,55 @@ router.post("/login", async (req, res) => {
 router.get("/register", (req, res) => {
   res.render("pages/register", {
     title: "Fohoso - Đăng ký",
+  });
+});
+
+router.post("/register", async (req, res) => {
+  const { name, email, password, passwordConfirm } = req.body;
+  const locals = {
+    title: "Fohoso - Đăng ký",
+    old: { name, email },
+  };
+
+  const existingUser = await User.findOne({ email });
+
+  if (existingUser) {
+    return res.render("pages/register", {
+      ...locals,
+      errorMessage: "Email đã được đăng ký.",
+    });
+  }
+
+  if (password !== passwordConfirm) {
+    return res.render("pages/register", {
+      ...locals,
+      errorMessage: "Mật khẩu không khớp.",
+    });
+  }
+
+  const user = await User.create({
+    name,
+    email,
+    password,
+  });
+  user.password = undefined;
+
+  try {
+    await paymentServerInstance.post("/api/v1/payment-accounts", {
+      user: user._id,
+    });
+  } catch (error) {
+    console.log(error);
+  }
+
+  const { accessToken, accessTokenOptions } = createAccessToken(user, req);
+
+  res.cookie("accessToken", accessToken, accessTokenOptions);
+
+  res.render("pages/login", {
+    title: "Fohoso - Đăng nhập",
+    successMessage: "Đăng ký thành công. Vui lòng đăng nhập.",
+    old: { email },
   });
 });
 
