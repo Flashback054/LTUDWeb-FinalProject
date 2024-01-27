@@ -273,6 +273,10 @@ router.get("/login/google", (req, res) => {
   res.redirect("/api/v1/auth/google");
 });
 
+router.post("/charge-histories", (req, res) => {
+  res.redirect(307, "/api/v1/charge-histories");
+});
+
 router.get("/login", redirectIfLoggedIn, (req, res) => {
   res.render("pages/login", {
     title: "Fohoso - Đăng nhập",

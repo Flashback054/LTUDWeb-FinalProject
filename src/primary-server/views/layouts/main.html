@@ -77,6 +77,7 @@
       const emptyCartMessage = document.getElementById("empty-cart-message");
       const cartNumber = document.getElementById("cart-number");
       const backButton = document.getElementById("back-button");
+      const chargeForm = document.getElementById("charge-form");
 
       const userCart = JSON.parse(localStorage.getItem(userCartKey));
 
@@ -395,6 +396,26 @@
           cartContentTable.parentElement.setAttribute("aria-hidden", "true");
           emptyCartMessage.setAttribute("aria-hidden", "false");
         }
+      }
+
+      if (chargeForm) {
+        chargeForm.addEventListener("submit", function (event) {
+          event.preventDefault();
+
+          const chargeAmount = window.prompt("Nhập số tiền bạn muốn nạp: ");
+          const chargeAmountNumber = parseInt(chargeAmount);
+
+          if (Number.isNaN(chargeAmountNumber)) {
+            return window.alert("Số tiền không hợp lệ");
+          }
+
+          if (chargeAmountNumber < 10000) {
+            return window.alert("Số tiền nạp tối thiểu là 10.000đ");
+          }
+
+          chargeForm[0].value = chargeAmountNumber;
+          chargeForm.submit();
+        });
       }
 
       updateCartNumber();
