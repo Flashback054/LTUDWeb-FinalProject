@@ -269,6 +269,10 @@ router.get("/cart", async (req, res) => {
   });
 });
 
+router.post("/orders", (req, res) => {
+  res.redirect(307, "/api/v1/orders");
+});
+
 router.get("/login/google", (req, res) => {
   res.redirect("/api/v1/auth/google");
 });
