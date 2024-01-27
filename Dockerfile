@@ -16,12 +16,10 @@ RUN yarn global add typescript
 # Copy the rest of the app's source code to /app
 COPY . .
 
+RUN cp -r src/ dist/
+
 # Build the app
 RUN yarn build
-
-# Copy the public and views folders to /app/dist
-RUN cp -r src/primary-server/public dist/src/primary-server/public
-RUN cp -r src/primary-server/views dist/src/primary-server/views
 
 # Run the app
 CMD ["yarn", "run", "start:prod"]

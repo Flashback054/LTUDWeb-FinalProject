@@ -13,5 +13,6 @@
 		"allowJs": true,
 		"checkJs": false
 		// "noImplicitAny": true
-	}
+	},
+	"include": ["./src/**/*"]
 }

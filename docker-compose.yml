@@ -7,3 +7,4 @@ services:
       - 8080:8080
       - 6969:6969
     restart: always
+    image: flashback054/book-store
