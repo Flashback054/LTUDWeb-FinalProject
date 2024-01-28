@@ -37,7 +37,10 @@ export const requireValidateJWT = async (
 			message: "Not authorized server",
 		});
 	} catch (err) {
-		next(err);
+		throw new CustomRequestError(401, {
+			reasonPhrase: "UNAUTHORIZED",
+			message: "Not authorized server",
+		});
 	}
 };
 
@@ -64,16 +67,19 @@ export const optionalValidateJWT = async (
 
 				res.set("Authorization", token);
 				return next();
+			} else {
+				throw new CustomRequestError(401, {
+					reasonPhrase: "UNAUTHORIZED",
+					message: "Not authorized server",
+				});
 			}
-
-			throw new CustomRequestError(401, {
-				reasonPhrase: "UNAUTHORIZED",
-				message: "Not authorized server",
-			});
 		}
 
 		next();
 	} catch (err) {
-		next(err);
+		throw new CustomRequestError(401, {
+			reasonPhrase: "UNAUTHORIZED",
+			message: "Not authorized server",
+		});
 	}
 };
