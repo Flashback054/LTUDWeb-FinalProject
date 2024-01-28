@@ -2,8 +2,8 @@ version: "3"
 
 services:
   book-store:
-    build: .
     ports:
       - 8080:8080
       - 6969:6969
     restart: always
+    image: flashback054/fohoso-bookstore

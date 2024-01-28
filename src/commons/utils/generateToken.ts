@@ -7,24 +7,37 @@ export function signToken(id: string, secret: string, expires: string) {
 	});
 }
 
+const config = {
+	accessSecret: process.env.ACCESS_SECRET,
+	accessExpiresIn: process.env.ACCESS_EXPIRES_IN,
+	accessCookieExpiresIn: process.env.ACCESS_COOKIE_EXPIRES_IN,
+	isProduction: process.env.NODE_ENV === "production",
+};
+
 export function createAccessToken(user: any, req: Request) {
 	const accessToken = signToken(
 		user._id,
-		process.env.ACCESS_SECRET,
-		process.env.ACCESS_EXPIRES_IN
+		config.accessSecret,
+		config.accessExpiresIn
 	);
 
 	const accessTokenOptions = {
 		expires: new Date(
 			// valid for 1 day
-			Date.now() + +process.env.ACCESS_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+			Date.now() + +config.accessCookieExpiresIn * 24 * 60 * 60 * 1000
 		),
 		httpOnly: true,
-		secure: false,
+		secure: true,
+		sameSite: "none" as "none",
 	};
 
-	if (req.secure || req.headers["x-forwarded-proto"] === "https") {
+	if (
+		config.isProduction ||
+		req.secure ||
+		req.headers["x-forwarded-proto"] === "https"
+	) {
 		accessTokenOptions.secure = true;
+		sameSite: "none";
 	}
 
 	return { accessToken, accessTokenOptions };

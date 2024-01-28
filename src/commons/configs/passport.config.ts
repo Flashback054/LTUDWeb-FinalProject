@@ -18,7 +18,7 @@ const config: Config = {
 
 // Set up Google OAuth 2.0
 const AUTH_OPTIONS = {
-	callbackURL: "http://localhost:8080/api/v1/auth/google/callback",
+	callbackURL: `${process.env.PRIMARY_SERVER_URL}/api/v1/auth/google/callback`,
 	clientID: config.GOOGLE_CLIENT_ID,
 	clientSecret: config.GOOGLE_CLIENT_SECRET,
 	scope: ["email", "profile", "openid"],

@@ -5,11 +5,10 @@ import { requireValidateJWT } from "../../commons/middlewares/serverAuthJwt";
 import { Router } from "express";
 
 const router = Router();
+router.use("/charge-histories", ChargeHistoryRouter);
 
-// router.use(requireValidateJWT);
-
+router.use(requireValidateJWT);
 router.use("/payments", PaymentRouter);
 router.use("/payment-accounts", PaymentAccountRouter);
-router.use("/charge-histories", ChargeHistoryRouter);
 
 export default router;

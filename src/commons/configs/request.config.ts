@@ -25,6 +25,18 @@ const validateJWT = (response: any) => {
 	});
 };
 
+const signJWT = () => {
+	return jwt.sign(
+		{
+			name: serverAuthPayload,
+		},
+		serverAuthSecret,
+		{
+			expiresIn: "1m",
+		}
+	);
+};
+
 // // Sign request with jwt token
 // axios.interceptors.request.use(
 // 	(config) => {
@@ -52,6 +64,7 @@ const requestTemplate = (req: Request, res: Response, url: string) => {
 			const headers = {
 				...req.headers,
 				"Content-Type": "application/json",
+				Authorization: signJWT(),
 			};
 
 			const response = await axios.request({
@@ -61,7 +74,7 @@ const requestTemplate = (req: Request, res: Response, url: string) => {
 				...options,
 			});
 
-			// validateJWT(response);
+			validateJWT(response);
 
 			return response.data.data || response.data;
 		} catch (err) {

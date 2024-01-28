@@ -40,9 +40,6 @@ export const createOrder = async (
 	const { user, orderDetails } = req.body;
 
 	const userId = user || req.user?.id;
-
-	console.log("User:", req.user);
-	console.log("User ID:", userId);
 	let order;
 	// For each orderDetails, check if orderDetails.quantity <= Book.quantity
 	// Use mongoose Session to rollback if any orderDetails.quantity > Book.quantity

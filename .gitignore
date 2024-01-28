@@ -1,5 +1,8 @@
 node_modules
+deploy_config/
 .env
+.env.local
+.env.production
 dist
 # Logs
 *.log
