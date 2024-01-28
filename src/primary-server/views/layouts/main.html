@@ -432,14 +432,6 @@
           checkoutForm.addEventListener("submit", async function (event) {
             event.preventDefault();
 
-            const confirm = window.confirm(
-              "Bạn có chắc chắn muốn đặt hàng không?"
-            );
-
-            if (!confirm) {
-              return;
-            }
-
             const userCart = JSON.parse(localStorage.getItem(userCartKey));
 
             const orderDetails = userCart.map((item) => {
@@ -449,6 +441,23 @@
                 price: +item.price,
               };
             });
+
+            const userMoney = +checkoutForm[0].value;
+            const total = orderDetails.reduce((total, item) => {
+              return total + item.quantity * item.price;
+            }, 0);
+
+            if (userMoney < total) {
+              return window.alert("Số dư không đủ để thanh toán");
+            }
+
+            const confirm = window.confirm(
+              "Bạn có chắc chắn muốn đặt hàng không?"
+            );
+
+            if (!confirm) {
+              return;
+            }
 
             try {
               submitButton.disabled = true;

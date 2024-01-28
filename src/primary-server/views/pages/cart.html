@@ -59,6 +59,11 @@
         </a>
         {{#if user}}
         <form action="/orders" method="post" id="checkout-form">
+          <input
+            type="hidden"
+            name="availableBalance"
+            value="{{paymentAccount.balance}}"
+          />
           <button
             type="submit"
             class="px-6 py-2 text-center text-white transition-colors rounded-md disabled:bg-gray-400 disabled:cursor-not-allowed bg-primary hover:bg-green-500"
